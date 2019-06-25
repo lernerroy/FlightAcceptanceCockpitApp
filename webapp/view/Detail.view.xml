@@ -1,0 +1,104 @@
+<mvc:View controllerName="com.legstate.fts.app.FlightAcceptanceCockpit.controller.Detail" xmlns="sap.m" xmlns:core="sap.ui.core"
+	xmlns:uxap="sap.uxap" xmlns:semantic="sap.f.semantic" xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:grid="sap.ui.layout.cssgrid">
+	
+	
+	<semantic:SemanticPage id="detailPage" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
+		<!--<semantic:titleHeading></semantic:titleHeading>-->
+		<!--<semantic:headerContent></semantic:headerContent>-->
+		<semantic:content>
+			<uxap:ObjectPageLayout id="objectPageLayout" enableLazyLoading="false" subSectionLayout="TitleOnLeft" showTitleInHeaderContent="false"
+				showHeaderContent="true">
+				<uxap:headerTitle>
+					<uxap:ObjectPageHeader objectImageURI="sap-icon://fa/airplane" objectImageShape="Circle" objectTitle="{i18n>TIT_FLIGHT_ORDER_TXT}"
+						objectSubtitle="{Aufnr} " objectImageAlt="{Aufnr} {Preaufnr}" id="ObjectPageLayoutHeaderTitle" isObjectIconAlwaysVisible="true"
+						isObjectTitleAlwaysVisible="true" isObjectSubtitleAlwaysVisible="true" isActionAreaAlwaysVisible="true" showPlaceholder="true">
+						<uxap:actions></uxap:actions>
+					</uxap:ObjectPageHeader>
+				</uxap:headerTitle>
+				<uxap:headerContent>
+					<VBox class="sapUiLargeMarginEnd sapUiMediumMarginTop detail-block" backgroundDesign="Solid">
+						<HBox class="sapUiTinyMarginBottom">
+							<core:Icon src="sap-icon://fa/arrival" class="sapUiTinyMarginEnd"/>
+							<Title text="Arrival" level="H1" titleStyle="H3"/>
+						</HBox>
+						<HBox>
+							<core:Icon src="sap-icon://show" class="sapUiTinyMarginEnd"/>
+							<Text text="{Precarriercode}{Preflightno}" class="sapUiTinyMarginEnd"/>
+							<Text text="{Predepairp}" class="sapUiTinyMarginEnd"/>
+							<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
+							<Text text="{Prearrairp}"/>
+						</HBox>
+						<HBox>
+							<core:Icon src="sap-icon://date-time" class="sapUiTinyMarginEnd"/>
+							<Text text="{ path: 'Prearrdate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { GMT: true,pattern : 'dd MMM yyyy' } } "
+								class="sapUiTinyMarginEnd"/>
+							<Text text="{ path : 'Prearrtime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm:ss' }} "/>
+						</HBox>
+					</VBox>
+					<VBox backgroundDesign="Solid" class="sapUiLargeMarginEnd sapUiMediumMarginTop detail-block">
+						<HBox class="sapUiTinyMarginBottom">
+							<core:Icon src="sap-icon://fa/departure" class="sapUiTinyMarginEnd"/>
+							<Title text="Departure" level="H1" titleStyle="H3"/>
+						</HBox>
+						<HBox>
+							<core:Icon src="sap-icon://show" class="sapUiTinyMarginEnd"/>
+							<Text text="{Precarriercode}{Flightno}" class="sapUiTinyMarginEnd"/>
+							<Text text="{Prearrairp}" class="sapUiTinyMarginEnd"/>
+							<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
+							<Text text="{Arrairp}"/>
+						</HBox>
+						<HBox>
+							<core:Icon src="sap-icon://date-time" class="sapUiTinyMarginEnd"/>
+							<Text text="{ path: 'Depdate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { GMT: true,pattern : 'dd MMM yyyy' } } "
+								class="sapUiTinyMarginEnd"/>
+							<Text text=" { path : 'Deptime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm:ss' }} "/>
+						</HBox>
+					</VBox>
+				</uxap:headerContent>
+				<uxap:sections>
+					<uxap:ObjectPageSection showTitle="false">
+						<uxap:subSections>
+							<uxap:ObjectPageSubSection>
+								<uxap:blocks>
+									<f:GridList width="100%" items="{ path: 'lobs>/' }" itemPress="onItemPressed">
+										<CustomListItem type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
+											<HBox justifyContent="SpaceBetween" fitContainer="true" alignItems="Center" class="sapUiSmallMargin">
+												<Title text="{lobs>title}" level="H3" titleStyle="H3" class="sapUiSmallMarginEnd"/>
+												<Image width="15rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}"/>
+											</HBox>
+										</CustomListItem>
+										<f:customLayout>
+											<!--Represnts the number of items in each grid row  -->
+											<grid:GridBoxLayout boxesPerRowConfig="XL1 L1 M1 S1"/>
+										</f:customLayout>
+									</f:GridList>
+								</uxap:blocks>
+							</uxap:ObjectPageSubSection>
+						</uxap:subSections>
+					</uxap:ObjectPageSection>
+				</uxap:sections>
+			</uxap:ObjectPageLayout>
+		</semantic:content>
+		<!--Semantic ShareMenu Buttons-->
+		<!--<semantic:sendEmailAction>-->
+		<!--	<semantic:SendEmailAction-->
+		<!--		id="shareEmail"-->
+		<!--		press=".onSendEmailPress"/>-->
+		<!--</semantic:sendEmailAction>-->
+		<semantic:closeAction>
+			<semantic:CloseAction id="closeColumn" press=".onCloseDetailPress"/>
+		</semantic:closeAction>
+		<!--<semantic:fullScreenAction>-->
+		<!--	<semantic:FullScreenAction-->
+		<!--			id="enterFullScreen"-->
+		<!--			visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"-->
+		<!--			press=".toggleFullScreen"/>-->
+		<!--</semantic:fullScreenAction>-->
+		<!--<semantic:exitFullScreenAction>-->
+		<!--	<semantic:ExitFullScreenAction-->
+		<!--			id="exitFullScreen"-->
+		<!--			visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"-->
+		<!--			press=".toggleFullScreen"/>-->
+		<!--</semantic:exitFullScreenAction>-->
+	</semantic:SemanticPage>
+</mvc:View>

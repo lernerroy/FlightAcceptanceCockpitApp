@@ -1,0 +1,18 @@
+[
+	{
+		"title": "Airport Charges",
+		"imageSrc": "./images/cargo.jpg"
+	},
+	{
+		"title": "Cargo Charges",
+		"imageSrc": "./images/cargo.jpg"
+	},
+	{
+		"title": "Engineering Services",
+		"imageSrc": "./images/cargo.jpg"
+	},
+	{
+		"title": "Overflying & Nav",
+		"imageSrc": "./images/cargo.jpg"
+	}		
+]
