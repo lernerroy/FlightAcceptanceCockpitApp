@@ -1,18 +1,22 @@
 [
 	{
 		"title": "Airport Charges",
-		"imageSrc": "./images/cargo.jpg"
+		"imageSrc": "./images/cargo.jpg",
+		"type": "AC"
 	},
 	{
 		"title": "Cargo Charges",
-		"imageSrc": "./images/cargo.jpg"
+		"imageSrc": "./images/cargo.jpg",
+		"type": "CC"
 	},
 	{
 		"title": "Engineering Services",
-		"imageSrc": "./images/cargo.jpg"
+		"imageSrc": "./images/cargo.jpg",
+		"type": "ES"
 	},
 	{
 		"title": "Overflying & Nav",
-		"imageSrc": "./images/cargo.jpg"
+		"imageSrc": "./images/cargo.jpg",
+		"type": "ON"
 	}		
 ]

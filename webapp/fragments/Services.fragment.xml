@@ -1,0 +1,80 @@
+<core:FragmentDefinition xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar" xmlns="sap.uxap" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core"
+	xmlns:f="sap.ui.layout.form">
+	<m:Table id="servicesTable" backgroundDesign="Transparent" headerDesign="Plain" showSeparators="Inner" sticky="HeaderToolbar">
+		<m:headerToolbar>
+			<m:OverflowToolbar design="Transparent" style="Clear">
+				<m:Button text="{i18n>BTN_ADDITIONAL_SERVICES}" iconFirst="true" icon="sap-icon://add" press="fnOpenAdditionalServicesDailog"/>
+			</m:OverflowToolbar>
+		</m:headerToolbar>
+		<m:columns>
+			<m:Column><m:Text text="{i18n>LBL_EXCE_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_NAME_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_DESC_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><m:Text text="{i18n>LBL_PRICE_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_QTY_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_TOTAL_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_CURRENCY_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_USEAGE_TYPE_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text=""/></m:Column>
+		</m:columns>
+		<m:items>
+			<m:ColumnListItem>
+				<m:cells>
+					<core:Icon src="sap-icon://status-positive" color="{= ${Direction} === 1 ? '#64E4CE': '#FF4B4B'}"/>
+					<m:Text text="{CtrVendorDesc}"/>
+					<m:Text text="{SrvcDesc}"/>
+					<m:Text text="{Price}"/>
+					<m:Input value="{Quantity}" editable="{objectView>/editFlightData}"/>
+					<m:Text text="{TotalPrice}"/>
+					<m:Text text="{CtrWaers}"/>
+					<m:Text text="{CtrUsageType}"/>
+					<m:Button icon="sap-icon://delete" type="Transparent" visible="{= ${AdditionalFlag} === 'X' ? true : false}"
+						press="fnOnDeleteArrivalAirportCharges"/>
+				</m:cells>
+			</m:ColumnListItem>
+		</m:items>
+	</m:Table>
+	<!--<m:Panel id="servicesPanel" expandable="true" expanded="true">-->
+	<!--	<m:headerToolbar>-->
+	<!--		<m:Toolbar style="Standard">-->
+	<!--			<m:Title text="Services"/>-->
+	<!--		</m:Toolbar>-->
+	<!--	</m:headerToolbar>-->
+	<!--	<m:content>-->
+	<!--		<m:Table id="servicesTable" backgroundDesign="Transparent" headerDesign="Plain" showSeparators="Inner" sticky="ColumnHeaders">-->
+	<!--			<m:headerToolbar>-->
+	<!--				<m:OverflowToolbar design="Transparent" style="Clear">-->
+	<!--					<m:Button text="{i18n>BTN_ADDITIONAL_SERVICES}" iconFirst="true" icon="sap-icon://add" press="fnOpenAdditionalServicesDailog"/>-->
+	<!--				</m:OverflowToolbar>-->
+	<!--			</m:headerToolbar>-->
+	<!--			<m:columns>-->
+	<!--				<m:Column><m:Text text="{i18n>LBL_EXCE_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_NAME_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_DESC_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><m:Text text="{i18n>LBL_PRICE_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_QTY_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_TOTAL_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_CURRENCY_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_USEAGE_TYPE_TXT}"/></m:Column>-->
+	<!--				<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text=""/></m:Column>-->
+	<!--			</m:columns>-->
+	<!--			<m:items>-->
+	<!--				<m:ColumnListItem>-->
+	<!--					<m:cells>-->
+	<!--						<core:Icon src="sap-icon://status-positive" color="{= ${Direction} === 1 ? '#64E4CE': '#FF4B4B'}"/>-->
+	<!--						<m:Text text="{CtrVendorDesc}"/>-->
+	<!--						<m:Text text="{SrvcDesc}"/>-->
+	<!--						<m:Text text="{Price}"/>-->
+	<!--						<m:Input value="{Quantity}" editable="{objectView>/editFlightData}"/>-->
+	<!--						<m:Text text="{TotalPrice}"/>-->
+	<!--						<m:Text text="{CtrWaers}"/>-->
+	<!--						<m:Text text="{CtrUsageType}"/>-->
+	<!--						<m:Button icon="sap-icon://delete" type="Transparent" visible="{= ${AdditionalFlag} === 'X' ? true : false}" press="fnOnDeleteArrivalAirportCharges"/>-->
+	<!--					</m:cells>-->
+	<!--				</m:ColumnListItem>-->
+	<!--			</m:items>-->
+	<!--		</m:Table>-->
+	<!--	</m:content>-->
+	<!--</m:Panel>-->
+</core:FragmentDefinition>

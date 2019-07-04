@@ -5,7 +5,6 @@
 			<Title id="masterPageTitle" text="{masterView>/title}" level="H2"/>
 		</semantic:titleHeading>
 		<semantic:content>
-			
 			<!-- For client side filtering add this to the items attribute: parameters: {operationMode: 'Client'}}" -->
 			<List id="list" width="auto" class="sapFDynamicPageAlignContent"
 				items="{ path: '/FlightSegmentHeaderSet', sorter: { path: 'Arrairp', descending: false }, groupHeaderFactory: '.createGroupHeader' }"
@@ -33,76 +32,36 @@
 				<items>
 					<CustomListItem type="Navigation" press=".onSelectionChange">
 						<VBox fitContainer="true">
-							<HBox class="sapUiSmallMarginBegin sapUiSmallMarginTop">
-								<Label text="Tail No:" class="sapUiTinyMarginEnd"></Label>
-								<Text text="{Pretailno}"/>
-							</HBox>
-							<HBox class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-								<Label text="A/C Type:" class="sapUiTinyMarginEnd"></Label>
-								<Text text="{Preaircrafttype}"/>
-							</HBox>
-							<HBox class="sapUiSmallMarginBegin sapUiTinyMarginTop">
-								<Label text="Ports:" class="sapUiTinyMarginEnd"></Label>
-								<Text text="{Predepairp}" class="sapUiTinyMarginEnd"/>
-								<core:Icon size="1rem" src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
-								<Text text="{Arrairp}" class="sapUiTinyMarginEnd"/>
-							</HBox>
-							<HBox class="sapUiTinyMarginTop">
+							<HBox>
 								<core:Icon size="1.5rem" src="sap-icon://fa/arrival" class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
-									<ObjectIdentifier title="{Precarriercode} {Preflightno}" text="{Preaufnr}" titleActive="true"/>
-									<HBox class="sapUiSmallMarginTopBottom">
-										<core:Icon size="1rem" src="sap-icon://date-time" class="sapUiTinyMarginEnd"/>
+									<Title text="{Precarriercode}{Preflightno}" level="H4"/>
+									<HBox>
+										<Text text="{Predepairp}" class="sapUiTinyMarginEnd"/>
+										<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
+										<Text text="{Prearrairp}," class="sapUiTinyMarginEnd"/>
 										<Text
-											text="{ path : 'Prearrdate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } } - { path : 'Prearrtime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm' } }"/>
+											text="{ path : 'Prearrdate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } } { path : 'Prearrtime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm' } }"/>
 									</HBox>
 								</VBox>
 							</HBox>
 							<HBox>
 								<core:Icon size="1.5rem" src="sap-icon://fa/departure" class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
-									<ObjectIdentifier title="{Carriercode}{Flightno}" text="{Aufnr}" titleActive="true"/>
-									<HBox class="sapUiSmallMarginTopBottom">
-										<core:Icon size="1rem" src="sap-icon://date-time" class="sapUiTinyMarginEnd"/>
+									<Title text="{Carriercode}{Flightno}" level="H4"/>
+									<HBox>
+										<Text text="{Prearrairp}" class="sapUiTinyMarginEnd"/>
+										<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
+										<Text text="{Arrairp}," class="sapUiTinyMarginEnd"/>
 										<Text
-											text="{ path : 'Depdate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } } - { path : 'Deptime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm' } }"/>
+											text="{ path : 'Depdate', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } } { path : 'Deptime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm' } }"/>
 									</HBox>
 								</VBox>
 							</HBox>
 						</VBox>
 					</CustomListItem>
 				</items>
-			</List>			
-			
-			<!--For client side filtering add this to the items attribute: parameters: {operationMode: 'Client'}}"-->
-			<!--<List id="list" width="auto" class="sapFDynamicPageAlignContent"-->
-			<!--	items="{ path: '/FlightSegmentHeaderSet', sorter: { path: 'Arrairp', descending: false }, groupHeaderFactory: '.createGroupHeader' }"-->
-			<!--	busyIndicatorDelay="{masterView>/delay}" noDataText="{masterView>/noDataText}"-->
-			<!--	mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true"-->
-			<!--	updateFinished=".onUpdateFinished" selectionChange=".onSelectionChange">-->
-			<!--	<infoToolbar>-->
-			<!--		<Toolbar active="true" id="filterBar" visible="{masterView>/isFilterBarVisible}" press=".onOpenViewSettings">-->
-			<!--			<Title id="filterBarLabel" text="{masterView>/filterBarLabel}" level="H3"/>-->
-			<!--		</Toolbar>-->
-			<!--	</infoToolbar>-->
-			<!--	<headerToolbar>-->
-			<!--		<OverflowToolbar>-->
-			<!--			<SearchField id="searchField" showRefreshButton="true" tooltip="{i18n>masterSearchTooltip}" search=".onSearch" width="auto">-->
-			<!--				<layoutData>-->
-			<!--					<OverflowToolbarLayoutData minWidth="150px" maxWidth="240px" shrinkable="true" priority="NeverOverflow"/>-->
-			<!--				</layoutData>-->
-			<!--			</SearchField>-->
-			<!--			<ToolbarSpacer/>-->
-			<!--			<Button id="sortButton" press=".onOpenViewSettings" icon="sap-icon://sort" type="Transparent"/>-->
-			<!--			<Button id="filterButton" press=".onOpenViewSettings" icon="sap-icon://filter" type="Transparent"/>-->
-			<!--			<Button id="groupButton" press=".onOpenViewSettings" icon="sap-icon://group-2" type="Transparent"/>-->
-			<!--		</OverflowToolbar>-->
-			<!--	</headerToolbar>-->
-			<!--	<items>-->
-			<!--		<ObjectListItem type="Navigation" press=".onSelectionChange" title="{Arrairp}"-->
-			<!--			number="{ path: 'Direction', formatter: '.formatter.currencyValue' }"></ObjectListItem>-->
-			<!--	</items>-->
-			<!--</List>-->
+			</List>
 		</semantic:content>
 	</semantic:SemanticPage>
 </mvc:View>

@@ -2,8 +2,9 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"../model/formatter",
+	"sap/ui/Device",
 	"sap/m/library"
-], function (BaseController, JSONModel, formatter, mobileLibrary) {
+], function (BaseController, JSONModel, formatter, Device, mobileLibrary) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
@@ -20,7 +21,7 @@ sap.ui.define([
 		onInit: function () {
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page is busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+			// between the busy indication fonr loading the view's meta data
 			var oViewModel = new JSONModel({
 				busy: false,
 				delay: 0,
@@ -32,6 +33,13 @@ sap.ui.define([
 			this.setModel(oViewModel, "detailView");
 
 			this.getOwnerComponent().getModel().metadataLoaded().then(this._onMetadataLoaded.bind(this));
+		},
+
+		onLobSelected: function (oEvent) {
+			var listItem = oEvent.getParameter("listItem");
+			var oItemContext = listItem.getBindingContext();
+			var oLobContext = listItem.getBindingContext("lobs");
+			this._showLob(oLobContext, oItemContext);
 		},
 
 		/* =========================================================== */
@@ -87,7 +95,7 @@ sap.ui.define([
 		_onObjectMatched: function (oEvent) {
 			var sObjectId = oEvent.getParameter("arguments").objectId;
 			var sFlightNo = oEvent.getParameter("arguments").flightNo;
-			
+
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel().metadataLoaded().then(function () {
 				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
@@ -126,6 +134,30 @@ sap.ui.define([
 			});
 		},
 
+		_showLob: function (oLob, oItem) {
+			// var bReplace = !Device.system.phone;
+			// set the layout property of FCL control to show two columns
+			// this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
+			// route to Lob screen 
+			// make sure we do not replace to hash 
+			// in order to go back to this screen 
+
+			var sLobType = oLob.getProperty("type");
+			var oRouter = this.getRouter();
+
+			if (sLobType === "AC") {
+				oRouter.navTo("AirportCharges", {
+					objectId: oItem.getProperty("Preaufnr"),
+					flightNo: oItem.getProperty("Aufnr")
+				});
+			} else if (sLobType == "CC"){
+				oRouter.navTo("CargoCharges", {
+					objectId: oItem.getProperty("Preaufnr"),
+					flightNo: oItem.getProperty("Aufnr")
+				});					
+			} 
+		},
+
 		_onBindingChange: function () {
 			var oView = this.getView(),
 				oElementBinding = oView.getElementBinding();
@@ -157,19 +189,19 @@ sap.ui.define([
 		_onMetadataLoaded: function () {
 			// Store original busy indicator delay for the detail view
 			var iOriginalViewBusyDelay = this.getView().getBusyIndicatorDelay(),
-				oViewModel = this.getModel("detailView"),
-				oLineItemTable = this.byId("lineItemsList"),
-				iOriginalLineItemTableBusyDelay = oLineItemTable.getBusyIndicatorDelay();
+				oViewModel = this.getModel("detailView");
+				// oLineItemTable = this.byId("lineItemsList");
+				// iOriginalLineItemTableBusyDelay = oLineItemTable.getBusyIndicatorDelay();
 
 			// Make sure busy indicator is displayed immediately when
 			// detail view is displayed for the first time
 			oViewModel.setProperty("/delay", 0);
 			oViewModel.setProperty("/lineItemTableDelay", 0);
 
-			oLineItemTable.attachEventOnce("updateFinished", function () {
-				// Restore original busy indicator delay for line item table
-				oViewModel.setProperty("/lineItemTableDelay", iOriginalLineItemTableBusyDelay);
-			});
+			// oLineItemTable.attachEventOnce("updateFinished", function () {
+			// 	// Restore original busy indicator delay for line item table
+			// 	oViewModel.setProperty("/lineItemTableDelay", iOriginalLineItemTableBusyDelay);
+			// });
 
 			// Binding the view will set it to not busy - so the view is always busy if it is not bound
 			oViewModel.setProperty("/busy", true);
@@ -184,7 +216,8 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
 			// No item should be selected on master after detail page is closed
 			this.getOwnerComponent().oListSelector.clearMasterListSelection();
-			this.getRouter().navTo("master");
+			this.onNavBack();
+			// this.getRouter().navTo("master");
 		},
 
 		/**

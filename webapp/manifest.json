@@ -51,9 +51,9 @@
 		"dependencies": {
 			"minUI5Version": "1.60.0",
 			"libs": {
-				"sap.ui.core": {},
 				"sap.m": {},
-				"sap.f": {}
+				"sap.ui.core": {},
+				"sap.ui.layout": {}
 			}
 		},
 		"contentDensities": {
@@ -75,6 +75,12 @@
 				"type": "sap.ui.model.json.JSONModel",
 				"settings": {},
 				"uri": "model/lobs.json"
+			},
+			"airportCharges": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {},
+				"uri": "model/airportCharges.json",
+				"preload": true
 			}
 		},
 		"routing": {
@@ -83,9 +89,11 @@
 				"viewType": "XML",
 				"viewPath": "com.legstate.fts.app.FlightAcceptanceCockpit.view",
 				"controlId": "layout",
-				"controlAggregation": "beginColumnPages",
+				"controlAggregation": "midColumnPages",
 				"bypassed": {
-					"target": "notFound"
+					"target": [
+						"notFound"
+					]
 				},
 				"async": true
 			},
@@ -93,29 +101,81 @@
 				{
 					"pattern": "",
 					"name": "master",
-					"target": "master"
+					"target": [
+						"master"
+					]
 				},
 				{
-					"pattern": "FlightSegmentHeaderSet/{objectId},{flightNo}",
+					"pattern": "Flight/{objectId},{flightNo}",
 					"name": "object",
 					"target": [
 						"master",
 						"object"
 					]
-				}
+				},
+				{
+					"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
+					"name": "Lob",
+					"target": [
+						"master",
+						"object",
+						"lob"
+					]
+				},
+				{
+					"pattern": "Flight/{objectId}/{flightNo}/AirportCharges",
+					"name": "AirportCharges",
+					"target": [
+						"master",
+						"object",
+						"airportCharges"
+					]
+				},
+				{
+					"pattern": "Flight/{objectId}/{flightNo}/CargoCharges",
+					"name": "CargoCharges",
+					"target": [
+						"master",
+						"object",
+						"cargoCharges"
+					]
+				}				
 			],
 			"targets": {
 				"master": {
 					"viewName": "Master",
 					"viewLevel": 1,
-					"viewId": "master"
+					"viewId": "masterView",
+					"controlAggregation": "beginColumnPages",
+					"title": "Home"
 				},
 				"object": {
 					"viewName": "Detail",
 					"viewId": "detail",
-					"viewLevel": 1,
+					"viewLevel": 2,
 					"controlAggregation": "midColumnPages"
 				},
+				"lob": {
+					"viewType": "XML",
+					"viewName": "lob",
+					"viewId": "lob",
+					"viewLevel": 3,
+					"controlAggregation": "midColumnPages"
+				},
+				"airportCharges": {
+					"viewType": "XML",
+					"viewName": "AirportCharges",
+					"viewId": "airportCharges",
+					"viewLevel": 3,
+					"controlAggregation": "midColumnPages"
+				},
+				"cargoCharges": {
+					"viewType": "XML",
+					"viewName": "CargoCharges",
+					"viewId": "cargoCharges",
+					"viewLevel": 3,
+					"controlAggregation": "midColumnPages"
+				},				
 				"detailObjectNotFound": {
 					"viewName": "DetailObjectNotFound",
 					"viewId": "detailObjectNotFound",
@@ -126,7 +186,8 @@
 					"viewId": "notFound"
 				}
 			}
-		}
+		},
+		"flexEnabled": true
 	},
 	"sap.platform.hcp": {
 		"uri": "webapp",
