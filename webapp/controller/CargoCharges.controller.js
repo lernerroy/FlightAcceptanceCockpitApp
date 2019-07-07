@@ -29,7 +29,8 @@ sap.ui.define([
 			this._oTabBar = this.getView().byId("TabBar");
 
 			var oLobView = new JSONModel({
-				infoPanelTitle: this.getResourceBundle().getText("CD_INFO_PANEL_TITLE")
+				infoPanelTitle: this.getResourceBundle().getText("CD_INFO_PANEL_TITLE"),
+				editMode: false
 			});
 
 			this.setModel(oLobView, "lobView");
@@ -44,6 +45,9 @@ sap.ui.define([
 
 			arrServicesTable.unbindAggregation("items");
 			depServicesTable.unbindAggregation("items");
+			
+			// select the arrival tab 
+			this._oTabBar.setSelectedKey("ARR");
 		},
 
 		_onRouteMatched: function (oEvent) {
@@ -82,6 +86,15 @@ sap.ui.define([
 			this._bindCargoServices(sObjectPath, sSelectedTabKey);
 
 		},
+		
+		toggleEditMode: function (oEvent) {
+			// toggle edit mode
+			var oLobModel = this.getModel("lobView");
+			
+			var isInEditMode = oLobModel.getProperty("/editMode");
+			
+			oLobModel.setProperty("/editMode", !isInEditMode);
+		},		
 
 		onTabSelected: function (oEvent) {
 

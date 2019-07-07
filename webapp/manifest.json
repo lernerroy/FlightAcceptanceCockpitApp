@@ -139,7 +139,16 @@
 						"object",
 						"cargoCharges"
 					]
-				}				
+				},
+				{
+					"pattern": "Flight/{objectId}/{flightNo}/EngServices",
+					"name": "EngServices",
+					"target": [
+						"master",
+						"object",
+						"engServices"
+					]
+				}
 			],
 			"targets": {
 				"master": {
@@ -175,7 +184,14 @@
 					"viewId": "cargoCharges",
 					"viewLevel": 3,
 					"controlAggregation": "midColumnPages"
-				},				
+				},
+				"engServices": {
+					"viewType": "XML",
+					"viewName": "EngServices",
+					"viewId": "engServices",
+					"viewLevel": 3,
+					"controlAggregation": "midColumnPages"
+				},
 				"detailObjectNotFound": {
 					"viewName": "DetailObjectNotFound",
 					"viewId": "detailObjectNotFound",

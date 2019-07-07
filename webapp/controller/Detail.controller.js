@@ -150,12 +150,17 @@ sap.ui.define([
 					objectId: oItem.getProperty("Preaufnr"),
 					flightNo: oItem.getProperty("Aufnr")
 				});
-			} else if (sLobType == "CC"){
+			} else if (sLobType === "CC"){
 				oRouter.navTo("CargoCharges", {
 					objectId: oItem.getProperty("Preaufnr"),
 					flightNo: oItem.getProperty("Aufnr")
 				});					
-			} 
+			} else if (sLobType === "ES"){
+				oRouter.navTo("EngServices", {
+					objectId: oItem.getProperty("Preaufnr"),
+					flightNo: oItem.getProperty("Aufnr")
+				});					
+			}
 		},
 
 		_onBindingChange: function () {
