@@ -39,6 +39,9 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 
 			this.getModel().metadataLoaded().then(function () {
+				
+				
+				
 				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
 					Preaufnr: args.objectId,
 					Aufnr: args.flightNo

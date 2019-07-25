@@ -1,12 +1,15 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"./BaseController",
+	"./LobBase.controller",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/Filter"
-], function (Controller, BaseController, JSONModel, Filter) {
+	"sap/ui/model/Filter",
+	"sap/ui/core/Fragment",
+	"../constants/Constants",
+	"com/legstate/fts/app/FlightAcceptanceCockpit/vendor/lodash.min"
+], function (Controller, LobBase, JSONModel, Filter, Fragment, Constants, lodash) {
 	"use strict";
 
-	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.AirportCharges", {
+	return LobBase.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.AirportCharges", {
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -39,35 +42,45 @@ sap.ui.define([
 
 		},
 
+		// setupServicesFragment: function(oController, oDataModel){
+
+		// 	// make sure controller and oDataModel are not null 
+		// 	if (!oController || !oDataModel){
+		// 		return;
+		// 	}
+
+		// 	// Create the fragment controller
+		// 	var oServicesFragmentController = new ServicesFragmentController(oController, oDataModel);
+
+		// 	// Load the services fragment 
+		// 	Fragment.load({
+		// 		type: "XML",
+		// 		id: "arrServices",
+		// 		name: "com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services",
+		// 		controller: oServicesFragmentController
+		// 	}).then(function(fragment){
+		// 		// add the fragment to content
+		// 		var oScrollContainer = oController.getView().byId("scrollContArrival");
+		// 		oScrollContainer.addContent(fragment);
+		// 	});			
+		// },
+
 		toggleEditMode: function (oEvent) {
 			// toggle edit mode
 			var oLobModel = this.getModel("lobView");
-			
+
 			var isInEditMode = oLobModel.getProperty("/editMode");
-			
+
 			oLobModel.setProperty("/editMode", !isInEditMode);
 		},
 
 		onBeforeRendering: function () {},
 
-		_unbindData: function () {
-			var sArrFragmentId = this.getView().createId("arrServices");
-			var arrServicesTable = sap.ui.core.Fragment.byId(sArrFragmentId, "servicesTable");
-
-			var sDepFragmentId = this.getView().createId("depServices");
-			var depServicesTable = sap.ui.core.Fragment.byId(sDepFragmentId, "servicesTable");
-
-			arrServicesTable.unbindAggregation("items");
-			depServicesTable.unbindAggregation("items");
-
-			this._oTabBar.setSelectedKey("ARR");
-		},
-
 		_onRouteMatched: function (oEvent) {
 
 			// make sure we unbind data in order to make sure
 			// we always get the latest data 
-			this._unbindData();
+			this.unbindData();
 
 			var args = oEvent.getParameter("arguments");
 
@@ -79,11 +92,15 @@ sap.ui.define([
 					Aufnr: args.flightNo
 				});
 
+				// bind the view 
 				this._bindView("/" + sObjectPath);
 
 				this.sObjectPath = sObjectPath;
 
 				this.getOwnerComponent().oListSelector.selectAListItem("/" + sObjectPath);
+
+				var oDataModel = this.getModel();
+
 			}.bind(this));
 		},
 
@@ -96,8 +113,7 @@ sap.ui.define([
 			this._bindPassangerDetails(sObjectPath, sSelectedTabKey);
 
 			// bind airport services fragment 
-			this._bindAirportServices(sObjectPath, sSelectedTabKey);
-
+			this.loadServices(sObjectPath + "/FlightSegmentItemSetAC");
 		},
 
 		onTabSelected: function (oEvent) {
@@ -108,56 +124,7 @@ sap.ui.define([
 			// bind passanger details 
 			this._bindPassangerDetails(sBindingPath, sSelectedKey);
 
-			// bind services 			
-			this._bindAirportServices(sBindingPath, sSelectedKey);
-
-		},
-
-		_bindAirportServices: function (sObjectPath, sSelectedTabKey) {
-
-			var sFragmentId = null;
-			var sBindingPath = "";
-			var aFilters = [];
-
-			if (sSelectedTabKey === "ARR") {
-				sFragmentId = this.getView().createId("arrServices");
-				sBindingPath = sObjectPath + "/FlightSegmentItemSetAC";
-				var arrFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 1);
-				aFilters.push(arrFilter);
-			} else if (sSelectedTabKey === "DEP") {
-				sFragmentId = this.getView().createId("depServices");
-				sBindingPath = sObjectPath + "/FlightSegmentItemSetAC";
-				var depFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 2);
-				aFilters.push(depFilter);
-			}
-
-			var oServicesTable = sap.ui.core.Fragment.byId(sFragmentId, "servicesTable");
-
-			if (!this.oTemplate) {
-				this.oTemplate = oServicesTable.getItems()[0];
-				oServicesTable.removeAllItems();
-			}
-
-			if (!oServicesTable.getBinding("items")) {
-
-				var oViewModel = this.getModel("airportChargesView");
-
-				// bind the services table 
-				oServicesTable.bindAggregation("items", {
-					path: sBindingPath,
-					template: this.oTemplate,
-					filters: aFilters,
-					events: {
-						change: function (oEvent) {},
-						dataRequested: function (oEvent) {
-							oViewModel.setProperty("/busy", true);
-						},
-						dataReceived: function (oEvent) {
-							oViewModel.setProperty("/busy", false);
-						}
-					}
-				});
-			}
+			this.renderServicesByDirection();
 		},
 
 		_bindPassangerDetails: function (sObjectPath, sSelectedTabKey) {
@@ -200,14 +167,6 @@ sap.ui.define([
 					}
 				});
 			}
-		},
-
-		onBack: function (oEvent) {
-			this.onNavBack();
-		},
-
-		_bindServices: function (sObjectPath, sSelectedTabKey) {
-
 		}
 	});
 

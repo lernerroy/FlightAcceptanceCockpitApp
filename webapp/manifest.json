@@ -91,65 +91,35 @@
 				"controlId": "layout",
 				"controlAggregation": "midColumnPages",
 				"bypassed": {
-					"target": [
-						"notFound"
-					]
+					"target": ["notFound"]
 				},
 				"async": true
 			},
-			"routes": [
-				{
-					"pattern": "",
-					"name": "master",
-					"target": [
-						"master"
-					]
-				},
-				{
-					"pattern": "Flight/{objectId},{flightNo}",
-					"name": "object",
-					"target": [
-						"master",
-						"object"
-					]
-				},
-				{
-					"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
-					"name": "Lob",
-					"target": [
-						"master",
-						"object",
-						"lob"
-					]
-				},
-				{
-					"pattern": "Flight/{objectId}/{flightNo}/AirportCharges",
-					"name": "AirportCharges",
-					"target": [
-						"master",
-						"object",
-						"airportCharges"
-					]
-				},
-				{
-					"pattern": "Flight/{objectId}/{flightNo}/CargoCharges",
-					"name": "CargoCharges",
-					"target": [
-						"master",
-						"object",
-						"cargoCharges"
-					]
-				},
-				{
-					"pattern": "Flight/{objectId}/{flightNo}/EngServices",
-					"name": "EngServices",
-					"target": [
-						"master",
-						"object",
-						"engServices"
-					]
-				}
-			],
+			"routes": [{
+				"pattern": "",
+				"name": "master",
+				"target": ["master"]
+			}, {
+				"pattern": "Flight/{objectId},{flightNo}",
+				"name": "object",
+				"target": ["master", "object"]
+			}, {
+				"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
+				"name": "Lob",
+				"target": ["master", "object", "lob"]
+			}, {
+				"pattern": "Flight/{objectId}/{flightNo}/AirportCharges",
+				"name": "AirportCharges",
+				"target": ["master", "object", "airportCharges"]
+			}, {
+				"pattern": "Flight/{objectId}/{flightNo}/CargoCharges",
+				"name": "CargoCharges",
+				"target": ["master", "object", "cargoCharges"]
+			}, {
+				"pattern": "Flight/{objectId}/{flightNo}/EngServices",
+				"name": "EngServices",
+				"target": ["master", "object", "engServices"]
+			}],
 			"targets": {
 				"master": {
 					"viewName": "Master",

@@ -1,12 +1,12 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"./BaseController",
+	"./LobBase.controller",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter"
-], function (Controller, BaseController, JSONModel, Filter) {
+], function (Controller, LobBase, JSONModel, Filter) {
 	"use strict";
 
-	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.CargoCharges", {
+	return LobBase.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.CargoCharges", {
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -20,10 +20,11 @@ sap.ui.define([
 				delay: 0,
 				title: ""
 			});
+			
+			this.setModel(oViewModel, "cargoChargesView");
 
 			this.getRouter().getRoute("CargoCharges").attachPatternMatched(this._onRouteMatched, this);
-
-			this.setModel(oViewModel, "cargoChargesView");
+			
 
 			// store tab bar in object 
 			this._oTabBar = this.getView().byId("TabBar");
@@ -36,25 +37,11 @@ sap.ui.define([
 			this.setModel(oLobView, "lobView");
 		},
 
-		_unbindData: function () {
-			var sArrFragmentId = this.getView().createId("arrServices");
-			var arrServicesTable = sap.ui.core.Fragment.byId(sArrFragmentId, "servicesTable");
-
-			var sDepFragmentId = this.getView().createId("depServices");
-			var depServicesTable = sap.ui.core.Fragment.byId(sDepFragmentId, "servicesTable");
-
-			arrServicesTable.unbindAggregation("items");
-			depServicesTable.unbindAggregation("items");
-			
-			// select the arrival tab 
-			this._oTabBar.setSelectedKey("ARR");
-		},
-
 		_onRouteMatched: function (oEvent) {
 
 			// make sure we unbind data in order to make sure
 			// we always get the latest data 
-			this._unbindData();
+			this.unbindData();
 
 			var args = oEvent.getParameter("arguments");
 
@@ -83,7 +70,8 @@ sap.ui.define([
 			this._bindCargoDetails(sObjectPath, sSelectedTabKey);
 
 			// bind airport services fragment 
-			this._bindCargoServices(sObjectPath, sSelectedTabKey);
+			// this._bindCargoServices(sObjectPath, sSelectedTabKey);
+			this.loadServices(sObjectPath + "/FlightSegmentItemSetCG");
 
 		},
 		

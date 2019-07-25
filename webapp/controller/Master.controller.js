@@ -159,6 +159,7 @@ sap.ui.define([
 			} else {
 				this.byId("viewSettingsDialog").open(sDialogTab);
 			}
+			
 		},
 
 		/**
