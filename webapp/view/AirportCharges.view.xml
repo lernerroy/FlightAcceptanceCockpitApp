@@ -30,7 +30,7 @@
 			</IconTabBar>
 		</semantic:content>
 		<semantic:closeAction>
-			<semantic:CloseAction id="closeColumn" press=".onBack"/>
+			<semantic:CloseAction id="closeColumn" press=".onNavBack"/>
 		</semantic:closeAction>
 	</semantic:SemanticPage>
 </mvc:View>

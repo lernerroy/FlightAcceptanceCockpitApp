@@ -69,10 +69,8 @@ sap.ui.define([
 			// bind passanger details fragment 
 			this._bindCargoDetails(sObjectPath, sSelectedTabKey);
 
-			// bind airport services fragment 
-			// this._bindCargoServices(sObjectPath, sSelectedTabKey);
+			// bind cargo details services fragment 
 			this.loadServices(sObjectPath + "/FlightSegmentItemSetCG");
-
 		},
 		
 		toggleEditMode: function (oEvent) {
@@ -140,54 +138,7 @@ sap.ui.define([
 					}
 				});
 			}
-		},
-
-		_bindCargoServices: function (sObjectPath, sSelectedTabKey) {
-			var sFragmentId = null;
-			var sBindingPath = "";
-			var aFilters = [];
-
-			if (sSelectedTabKey === "ARR") {
-				sFragmentId = this.getView().createId("arrServices");
-				sBindingPath = sObjectPath + "/FlightSegmentItemSetCG";
-				var arrFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 1);
-				aFilters.push(arrFilter);
-			} else if (sSelectedTabKey === "DEP") {
-				sFragmentId = this.getView().createId("depServices");
-				sBindingPath = sObjectPath + "/FlightSegmentItemSetCG";
-				var depFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 2);
-				aFilters.push(depFilter);
-			}
-
-			var oServicesTable = sap.ui.core.Fragment.byId(sFragmentId, "servicesTable");
-
-			if (!this.oTemplate) {
-				this.oTemplate = oServicesTable.getItems()[0];
-				oServicesTable.removeAllItems();
-			}
-
-			if (!oServicesTable.getBinding("items")) {
-				
-				var oViewModel = this.getModel("cargoChargesView");
-				
-				// bind the services table 
-				oServicesTable.bindAggregation("items", {
-					path: sBindingPath,
-					template: this.oTemplate,
-					filters: aFilters,
-					events: {
-						change: function (oEvent) {},
-						dataRequested: function (oEvent) {
-							oViewModel.setProperty("/busy", true);
-						},
-						dataReceived: function (oEvent) {
-							oViewModel.setProperty("/busy", false);
-						}
-					}
-				});
-			}
 		}
-
 	});
 
 });

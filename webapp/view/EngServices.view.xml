@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:semantic="sap.f.semantic" xmlns:uxap="sap.uxap"
-	xmlns:html="http://www.w3.org/1999/xhtml" controllerName="com.legstate.fts.app.FlightAcceptanceCockpit.controller.AirportCharges">
-	<semantic:SemanticPage showFooter="true" id="lobPage" busy="{airportChargesView>/busy}" busyIndicatorDelay="{airportChargesView>/delay}">
+	xmlns:html="http://www.w3.org/1999/xhtml" controllerName="com.legstate.fts.app.FlightAcceptanceCockpit.controller.EngServices">
+	<semantic:SemanticPage showFooter="true" id="lobPage" busy="{engServicesView>/busy}" busyIndicatorDelay="{engServicesView>/delay}">
 		<semantic:titleHeading>
 			<Title text="Engineering Services"/>
 		</semantic:titleHeading>
@@ -24,7 +24,7 @@
 			</IconTabBar>
 		</semantic:content>
 		<semantic:closeAction>
-			<semantic:CloseAction id="closeColumn" press=".onBack"/>
+			<semantic:CloseAction id="closeColumn" press=".onNavBack"/>
 		</semantic:closeAction>
 	</semantic:SemanticPage>
 </mvc:View>
