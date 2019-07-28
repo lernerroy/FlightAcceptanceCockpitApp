@@ -305,8 +305,8 @@ sap.ui.define([
 			// set the layout property of FCL control to show two columns
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getRouter().navTo("object", {
-				objectId: oItem.getBindingContext().getProperty("Preaufnr"),
-				flightNo: oItem.getBindingContext().getProperty("Aufnr")
+				arrFlightNo: oItem.getBindingContext().getProperty("Preaufnr"),
+				depFlightNo: oItem.getBindingContext().getProperty("Aufnr")
 			}, bReplace);
 		},
 

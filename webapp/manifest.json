@@ -69,7 +69,10 @@
 			},
 			"": {
 				"dataSource": "mainService",
-				"preload": true
+				"preload": true,
+				"settings": {
+					"useBatch": false
+				}
 			},
 			"lobs": {
 				"type": "sap.ui.model.json.JSONModel",
@@ -100,7 +103,7 @@
 				"name": "master",
 				"target": ["master"]
 			}, {
-				"pattern": "Flight/{objectId},{flightNo}",
+				"pattern": "Flight/{arrFlightNo},{depFlightNo}",
 				"name": "object",
 				"target": ["master", "object"]
 			}, {
@@ -108,15 +111,15 @@
 				"name": "Lob",
 				"target": ["master", "object", "lob"]
 			}, {
-				"pattern": "Flight/{objectId}/{flightNo}/AirportCharges",
+				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/AirportCharges",
 				"name": "AirportCharges",
 				"target": ["master", "object", "airportCharges"]
 			}, {
-				"pattern": "Flight/{objectId}/{flightNo}/CargoCharges",
+				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/CargoCharges",
 				"name": "CargoCharges",
 				"target": ["master", "object", "cargoCharges"]
 			}, {
-				"pattern": "Flight/{objectId}/{flightNo}/EngServices",
+				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/EngServices",
 				"name": "EngServices",
 				"target": ["master", "object", "engServices"]
 			}],

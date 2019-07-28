@@ -12,24 +12,25 @@
 		</m:headerToolbar>
 		<m:columns>
 			<m:Column><m:Text text="{i18n>LBL_EXCE_TXT}"/></m:Column>
+			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="Service Code"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_NAME_TXT}"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_VENDOR_DESC_TXT}"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center"><m:Text text="{i18n>LBL_PRICE_TXT}"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_QTY_TXT}"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_TOTAL_TXT}"/></m:Column>
-			<!--<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_CURRENCY_TXT}"/></m:Column>-->
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text="{i18n>LBL_USEAGE_TYPE_TXT}"/></m:Column>
 			<m:Column minScreenWidth="Tablet" demandPopin="true"><m:Text text=""/></m:Column>
 		</m:columns>
 		<m:items>
-			<m:ColumnListItem>
+			<m:ColumnListItem type="Inactive" selected="true">
 				<m:cells>
 					<core:Icon src="sap-icon://status-positive" color="{= ${flightServices>Direction} === 1 ? '#64E4CE': '#FF4B4B'}"/>
+					<m:Text text="{flightServices>SrvcCode}"/>
 					<m:Text text="{flightServices>CtrVendorDesc}"/>
 					<m:Text text="{flightServices>SrvcDesc}"/>
 					<m:Text
 						text="{ parts: [ {path: 'flightServices>Price'}, {path: 'flightServices>CtrWaers'} ], type: 'sap.ui.model.type.Currency', formatOptions: { showMeasure: true, decimals: 1, style: 'short' } }"/>
-					<m:Input value="{flightServices>Quantity}" editable="{lobView>/editMode}"/>
+					<m:Input value="{flightServices>Quantity}" editable="{lobView>/editMode}" change=".onServiceQuantityChanged"/>
 					<m:Text
 						text="{ parts: [ {path: 'flightServices>TotalPrice'}, {path: 'flightServices>CtrWaers'} ], type: 'sap.ui.model.type.Currency', formatOptions: { showMeasure: true, decimals: 1, style: 'short' } }"/>
 					<m:Text text="{flightServices>CtrUsageType}"/>

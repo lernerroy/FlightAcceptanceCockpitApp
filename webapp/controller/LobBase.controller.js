@@ -3,15 +3,36 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"com/legstate/fts/app/FlightAcceptanceCockpit/vendor/lodash.min",
-	"../constants/Constants"
-], function (Controller, BaseController, JSONModel, lodash, Constants) {
+	"../constants/Constants",
+	"com/legstate/fts/app/FlightAcceptanceCockpit/dialog/BusyDialogController",
+	"sap/m/MessageBox"
+], function (Controller, BaseController, JSONModel, lodash, Constants, BusyDialog, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.LobBase", {
 
+		// ========================= Common Setup/Init =========================
+
+		setupLobModel: function (sTitle, sLobType) {
+			var oLobView = new JSONModel({
+				infoPanelTitle: sTitle,
+				lobType: sLobType,
+				editMode: false,
+				busy: false,
+				delay: 0,
+				entryIsLocked: false
+			});
+
+			this.setModel(oLobView, "lobView");
+		},
+
+		// ========================= End of Common Setup/Init =========================
+
+		// ========================= Common Helpers =========================
+
 		unbindData: function () {
 
-			this._oTabBar.setSelectedKey("ARR");
+			this._oTabBar.setSelectedKey(Constants.FlightSegmentType.ARRIVAL);
 
 			var oServicesModel = this.getModel("flightServices");
 
@@ -26,6 +47,121 @@ sap.ui.define([
 				moreServices: []
 			});
 		},
+
+		getLobModel: function () {
+			return this.getModel("lobView");
+		},
+
+		handleRouteMatched: function (oEvent) {
+
+			// make sure we unbind data in order to make sure
+			// we always get the latest data 
+			this.unbindData();
+
+			// Get arguemnts and save them 
+			this.oRouteArgs = oEvent.getParameter("arguments");
+
+			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
+
+			this.getModel().metadataLoaded().then(function () {
+
+				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
+					Preaufnr: this.oRouteArgs.arrFlightNo,
+					Aufnr: this.oRouteArgs.depFlightNo
+				});
+
+				// bind the view 
+				this.bindView("/" + sObjectPath);
+
+				this.sObjectPath = sObjectPath;
+
+				// Select last selected row
+				this.getOwnerComponent().oListSelector.selectAListItem("/" + sObjectPath);
+
+			}.bind(this));
+		},
+
+		bindView: function (sObjectPath) {
+			// Should be override by child controller
+		},
+
+		getFlightNumberByDirection: function () {
+			var sDirection = this._getDirection();
+			if (sDirection === Constants.FlightSegmentType.ARRIVAL) {
+				return this.oRouteArgs.arrFlightNo;
+			} else {
+				return this.oRouteArgs.depFlightNo;
+			}
+		},
+
+		// ========================= End of Common Helpers =========================
+
+		// ========================= Common Action Handlers =========================
+
+		onEditPressed: function (oEvent) {
+
+			// Get the flight number by the current selected direction
+			// (Arrival or Departure)
+			var sFlightNumber = this.getFlightNumberByDirection();
+
+			if (!sFlightNumber) {
+				return;
+			}
+
+			// Here we need to make a call to the service to enqueu this record
+			// if the service call will succeed then we can go into edit mode
+			var oDataModel = this.getModel();
+
+			var self = this;
+
+			var oDialog = new BusyDialog(null, "Enqueue...");
+			oDialog.present(this.getView());
+
+			oDataModel.callFunction("/EnqueueSegment", {
+				method: "POST",
+				urlParameters: {
+					"FlightNumber": sFlightNumber
+				},
+				success: function (oData, response) {
+					oDialog.dismiss();
+					var result = oData.EnqueueSegment;
+					if (oData.IsLocked === true) {
+						self.getLobModel().setProperty("/entryIsLocked", true);
+						// modify the lob view model that we're in edit mode
+						self.getLobModel().setProperty("/editMode", true);
+					} else {
+						// present error message that we cannot enqueu this object
+						MessageBox.alert(result.Error);
+						self.getLobModel().setProperty("/entryIsLocked", false);
+					}
+				},
+				error: function (oErr) {
+					oDialog.dismiss();
+					// Error handling here
+				}
+			});
+
+		},
+
+		onCancelEdit: function (oEvent) {
+			// cancel edit mode
+			this.getLobModel().setProperty("/editMode", false);
+		},
+
+		onServiceQuantityChanged: function (oEvent) {
+
+			debugger;
+
+			// get the parent row where this input field is located
+			var oParent = oEvent.getSource().getParent();
+
+			// get the binding path of this row 
+
+		},
+
+		// ========================= End of Common Action Handlers =========================
+
+		// ========================= Flight Services =========================
 
 		loadServices: function (sObjectPath) {
 
@@ -244,9 +380,7 @@ sap.ui.define([
 
 		},
 
-		// ========================= More Services Handlers =========================
-
-			onMoreServicesButtonPressed: function (oEvent) {
+		onMoreServicesButtonPressed: function (oEvent) {
 			if (!this._oMoreServicesDialog) {
 				this._oMoreServicesDialog = sap.ui.xmlfragment("com.legstate.fts.app.FlightAcceptanceCockpit.fragments.MoreServices", this);
 			}
@@ -307,6 +441,8 @@ sap.ui.define([
 			this._oMoreServicesDialog.destroy();
 			this._oMoreServicesDialog = null;
 		}
+
+		// ========================= End of Flight Services =========================
 
 	});
 

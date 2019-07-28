@@ -7,14 +7,12 @@ sap.ui.define([
 
 	return Controller.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.ServicesFragmentController", {
 		constructor: function (oController, oDataModel) {
-			debugger;
 			this._oController = oController;
 			this._oDataModel = oDataModel;
 			return Controller.call(this);
 		},
 		
 		onMoreServicesButtonPressed: function(event){
-			debugger;	
 		},
 
 		bind: function (sFlightSegmentType, sObjectPath) {

@@ -26,20 +26,16 @@ sap.ui.define([
 
 			this.setModel(oViewModel, "airportChargesView");
 
-			// create the Lob shared view 
-			// and add all relevant info to it
-			var oLobView = new JSONModel({
-				infoPanelTitle: this.getResourceBundle().getText("AC_INFO_PANEL_TITLE"),
-				editMode: false
-			});
-
-			this.setModel(oLobView, "lobView");
-
-			// handle routing 
-			this.getRouter().getRoute("AirportCharges").attachPatternMatched(this._onRouteMatched, this);
-
+			// setup			
+			this.setupLobModel(
+				this.getResourceBundle().getText("AC_INFO_PANEL_TITLE"),
+				Constants.LobType.AIRPORT_CHARGES
+			);
+			
 			this._oTabBar = this.getView().byId("TabBar");
 
+			// handle routing 
+			this.getRouter().getRoute("AirportCharges").attachPatternMatched(this.handleRouteMatched, this);
 		},
 
 		// setupServicesFragment: function(oController, oDataModel){
@@ -65,46 +61,45 @@ sap.ui.define([
 		// 	});			
 		// },
 
-		toggleEditMode: function (oEvent) {
-			// toggle edit mode
-			var oLobModel = this.getModel("lobView");
+		// toggleEditMode: function (oEvent) {
+		// 	// toggle edit mode
+		// 	var oLobModel = this.getModel("lobView");
 
-			var isInEditMode = oLobModel.getProperty("/editMode");
+		// 	var isInEditMode = oLobModel.getProperty("/editMode");
 
-			oLobModel.setProperty("/editMode", !isInEditMode);
-		},
+		// 	oLobModel.setProperty("/editMode", !isInEditMode);
+		// },
 
 		onBeforeRendering: function () {},
 
 		_onRouteMatched: function (oEvent) {
 
-			// make sure we unbind data in order to make sure
-			// we always get the latest data 
-			this.unbindData();
+			// // make sure we unbind data in order to make sure
+			// // we always get the latest data 
+			// this.unbindData();
 
-			var args = oEvent.getParameter("arguments");
+			// var args = oEvent.getParameter("arguments");
 
-			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
+			// this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 
-			this.getModel().metadataLoaded().then(function () {
-				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
-					Preaufnr: args.objectId,
-					Aufnr: args.flightNo
-				});
+			// this.getModel().metadataLoaded().then(function () {
+			// 	var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
+			// 		Preaufnr: args.arrFlightNo,
+			// 		Aufnr: args.depFlightNo
+			// 	});
 
-				// bind the view 
-				this._bindView("/" + sObjectPath);
+			// 	// bind the view 
+			// 	this._bindView("/" + sObjectPath);
 
-				this.sObjectPath = sObjectPath;
+			// 	this.sObjectPath = sObjectPath;
 
-				this.getOwnerComponent().oListSelector.selectAListItem("/" + sObjectPath);
+			// 	this.getOwnerComponent().oListSelector.selectAListItem("/" + sObjectPath);
 
-				var oDataModel = this.getModel();
 
-			}.bind(this));
+			// }.bind(this));
 		},
 
-		_bindView: function (sObjectPath) {
+		bindView: function (sObjectPath) {
 
 			// get selected tab key
 			var sSelectedTabKey = this._oTabBar.getSelectedKey();
@@ -117,14 +112,30 @@ sap.ui.define([
 		},
 
 		onTabSelected: function (oEvent) {
+			
+			var oLobModel = this.getLobModel();
+			
+			
+			
+			if (oLobModel.getData().entryIsLocked === true){
+				// cancel tab selection
+				this._oTabBar.setSelectedKey(this._sCurrentSelectedTabKey);	
+				// oEvent.cancelBubble();
+				// oEvent.preventDefault();
+				return;
+			}
+			
+			
 
 			var sBindingPath = "/" + this.sObjectPath;
 			var sSelectedKey = oEvent.getParameter("selectedKey");
-
+			
 			// bind passanger details 
 			this._bindPassangerDetails(sBindingPath, sSelectedKey);
 
 			this.renderServicesByDirection();
+			
+			this._sCurrentSelectedTabKey = sSelectedKey;
 		},
 
 		_bindPassangerDetails: function (sObjectPath, sSelectedTabKey) {

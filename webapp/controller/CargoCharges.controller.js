@@ -2,8 +2,8 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"./LobBase.controller",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/Filter"
-], function (Controller, LobBase, JSONModel, Filter) {
+	"../constants/Constants"
+], function (Controller, LobBase, JSONModel ,Constants) {
 	"use strict";
 
 	return LobBase.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.CargoCharges", {
@@ -21,6 +21,7 @@ sap.ui.define([
 				title: ""
 			});
 			
+			
 			this.setModel(oViewModel, "cargoChargesView");
 
 			this.getRouter().getRoute("CargoCharges").attachPatternMatched(this._onRouteMatched, this);
@@ -28,13 +29,13 @@ sap.ui.define([
 
 			// store tab bar in object 
 			this._oTabBar = this.getView().byId("TabBar");
+			
+			this.setupLobModel(
+				this.getResourceBundle().getText("CD_INFO_PANEL_TITLE"),
+				Constants.LobType.CARGO_DETAILS
+			);			
+			
 
-			var oLobView = new JSONModel({
-				infoPanelTitle: this.getResourceBundle().getText("CD_INFO_PANEL_TITLE"),
-				editMode: false
-			});
-
-			this.setModel(oLobView, "lobView");
 		},
 
 		_onRouteMatched: function (oEvent) {

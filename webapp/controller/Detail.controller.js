@@ -93,8 +93,9 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched: function (oEvent) {
-			var sObjectId = oEvent.getParameter("arguments").objectId;
-			var sFlightNo = oEvent.getParameter("arguments").flightNo;
+			
+			var sObjectId = oEvent.getParameter("arguments").arrFlightNo;
+			var sFlightNo = oEvent.getParameter("arguments").depFlightNo;
 
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel().metadataLoaded().then(function () {
@@ -147,18 +148,18 @@ sap.ui.define([
 
 			if (sLobType === "AC") {
 				oRouter.navTo("AirportCharges", {
-					objectId: oItem.getProperty("Preaufnr"),
-					flightNo: oItem.getProperty("Aufnr")
+					arrFlightNo: oItem.getProperty("Preaufnr"),
+					depFlightNo: oItem.getProperty("Aufnr")
 				});
 			} else if (sLobType === "CC"){
 				oRouter.navTo("CargoCharges", {
-					objectId: oItem.getProperty("Preaufnr"),
-					flightNo: oItem.getProperty("Aufnr")
+					arrFlightNo: oItem.getProperty("Preaufnr"),
+					depFlightNo: oItem.getProperty("Aufnr")
 				});					
 			} else if (sLobType === "ES"){
 				oRouter.navTo("EngServices", {
-					objectId: oItem.getProperty("Preaufnr"),
-					flightNo: oItem.getProperty("Aufnr")
+					arrFlightNo: oItem.getProperty("Preaufnr"),
+					depFlightNo: oItem.getProperty("Aufnr")
 				});					
 			}
 		},
