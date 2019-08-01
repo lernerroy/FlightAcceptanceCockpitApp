@@ -35,7 +35,6 @@ sap.ui.define([
 
 		unbindData: function () {
 
-			this._oTabBar.setSelectedKey(Constants.FlightSegmentType.ARRIVAL);
 
 			var oServicesModel = this.getModel("flightServices");
 
@@ -48,8 +47,13 @@ sap.ui.define([
 				details: {},
 				allServices: [],
 				currentServices: [],
-				moreServices: []
+				moreServices: [],
+				tabs: []
 			});
+			
+			oServicesModel.refresh();
+			
+			
 		},
 
 		getLobModel: function () {
@@ -69,11 +73,9 @@ sap.ui.define([
 
 			this.getModel().metadataLoaded().then(function () {
 
-				debugger;
-
 				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
-					Preaufnr: this.oRouteArgs.arrFlightNo,
-					Aufnr: this.oRouteArgs.depFlightNo
+					Preaufnr: this.oRouteArgs.arrFlightNo || '',
+					Aufnr: this.oRouteArgs.depFlightNo || ''
 				});
 
 				// bind the view 
@@ -269,8 +271,8 @@ sap.ui.define([
 		loadServices: function (sObjectPath, sExpand) {
 
 			var oDataModel = this.getModel();
-			
-			this.getLobModel().setProperty("/busy",true);
+
+			this.getLobModel().setProperty("/busy", true);
 
 			var self = this; // save context 
 
@@ -280,7 +282,7 @@ sap.ui.define([
 					"$expand": sExpand
 				},
 				success: function (response, oData) {
-					self.getLobModel().setProperty("/busy",false);
+					self.getLobModel().setProperty("/busy", false);
 					// handle the loaded services
 					self.handleFlightSegmentLoaded(oData.data)
 				},
@@ -310,6 +312,7 @@ sap.ui.define([
 				moreServices: [], // more services that will be displayed on table 
 				inboundDetails: {},
 				outboundDetails: {},
+				tabs: [],
 				details: {}, // details to present 
 				1: {
 					details: {},
@@ -327,10 +330,49 @@ sap.ui.define([
 			// to render the data in the UI 
 			this.setModel(oServicesModel, "flightServices");
 
+			this.handleTabsVisibility(oFlightSegment);
+
 			// map services for inbound and outbound flight 
 			this.mapAndBindServices();
 
 			this.renderServicesByDirection();
+
+		},
+		// TODO: Build tabs with binding ! 
+		handleTabsVisibility: function (oFlightSegment) {
+
+			var oFlightSegmentModel = this.getServicesModel();
+
+			var aTabs = [];
+			var icon = sap.ui.core.IconPool.getIconURI("arrival","fa");
+			
+
+			if (oFlightSegment.Preaufnr) {
+				
+				var icon = sap.ui.core.IconPool.getIconURI("arrival","fa");			
+				
+				aTabs.push({
+					title: "Arrival",
+					key: Constants.FlightSegmentType.ARRIVAL,
+					icon: sap.ui.core.IconPool.getIconURI("arrival","fa")
+				});
+				
+				this._oTabBar.setSelectedKey(Constants.FlightSegmentType.ARRIVAL);
+			}
+
+			if (oFlightSegment.Aufnr) {
+				aTabs.push({
+					title: "Departure",
+					key: Constants.FlightSegmentType.DEPARTURE,
+					icon: sap.ui.core.IconPool.getIconURI("departure","fa")
+				});
+				
+				if (!oFlightSegment.Preaufnr){
+					this._oTabBar.setSelectedKey(Constants.FlightSegmentType.DEPARTURE);
+				}
+			}
+			
+			oFlightSegmentModel.setProperty("/tabs",aTabs);
 
 		},
 
@@ -339,6 +381,7 @@ sap.ui.define([
 		},
 
 		renderServicesByDirection: function () {
+
 			// copy the services from the relevant direction to displayed services 
 			let nDirection = this._getDirection() === Constants.FlightSegmentType.ARRIVAL ? 1 : 2;
 			var oServicesModel = this.getServicesModel();
@@ -351,7 +394,7 @@ sap.ui.define([
 			oServicesModel.setProperty("/details", oServicesModel.getProperty("/" + nDirection + "/details"));
 
 			// refresh model to apply changes to the UI
-			oServicesModel.refresh(true);
+			oServicesModel.refresh();
 		},
 
 		/**
@@ -377,12 +420,12 @@ sap.ui.define([
 			}), function (oSrv) {
 				return oSrv.Direction;
 			});
-			
+
 			var self = this;
 
 			// iterate on direction and collect all services per direction
 			_.forEach(aDirections, function (nDirection) {
-				
+
 				var details = {};
 
 				// Map arrival and departure details to model

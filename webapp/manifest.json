@@ -114,7 +114,7 @@
 					]
 				},
 				{
-					"pattern": "Flight/{arrFlightNo},{depFlightNo}",
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:",
 					"name": "object",
 					"target": [
 						"master",
@@ -122,7 +122,7 @@
 					]
 				},
 				{
-					"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
+					"pattern": "Flight/:objectId:/:flightNo:/Lob/{lobType}",
 					"name": "Lob",
 					"target": [
 						"master",
@@ -131,7 +131,7 @@
 					]
 				},
 				{
-					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/AirportCharges",
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:/AirportCharges",
 					"name": "AirportCharges",
 					"target": [
 						"master",
@@ -140,7 +140,7 @@
 					]
 				},
 				{
-					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/CargoCharges",
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:/CargoCharges",
 					"name": "CargoCharges",
 					"target": [
 						"master",
@@ -149,7 +149,7 @@
 					]
 				},
 				{
-					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/EngServices",
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:/EngServices",
 					"name": "EngServices",
 					"target": [
 						"master",

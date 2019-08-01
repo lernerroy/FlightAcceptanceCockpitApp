@@ -42,20 +42,11 @@ sap.ui.define([
 		onBeforeRendering: function () {},
 
 		bindView: function (sObjectPath) {
-
-			// get selected tab key
-			// var sSelectedTabKey = this._oTabBar.getSelectedKey();
-
-			// bind passanger details fragment 
-			// this._bindPassangerDetails(sObjectPath, sSelectedTabKey);
-
-			// bind airport services fragment 
-
 			this.loadServices(sObjectPath, "FlightSegmentItemSetAC,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax");
-			// this.loadServices(sObjectPath + "/FlightSegmentItemSetAC");
 		},
 
 		onTabSelected: function (oEvent) {
+			
 
 			var oLobModel = this.getLobModel();
 

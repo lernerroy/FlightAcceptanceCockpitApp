@@ -40,9 +40,9 @@
       "path": "/FTS",
       "target": {
         "type": "destination",
-        "name": "FTS"
+        "name": "FIDCLNT300"
       },
-      "description": "Flight To Settle Demo System"
+      "description": "Flight To Settle System"
     }
   ],
   "welcomeFile": "/webapp/index.html",

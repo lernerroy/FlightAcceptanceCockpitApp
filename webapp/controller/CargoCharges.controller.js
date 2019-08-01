@@ -70,15 +70,6 @@ sap.ui.define([
 				sObjectPath,
 				"FlightSegmentItemSetCG,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax"
 			);
-
-			// // get selected tab key
-			// var sSelectedTabKey = this._oTabBar.getSelectedKey();
-
-			// // bind passanger details fragment 
-			// this._bindCargoDetails(sObjectPath, sSelectedTabKey);
-
-			// // bind cargo details services fragment 
-			// this.loadServices(sObjectPath + "/FlightSegmentItemSetCG");
 		},
 		
 		toggleEditMode: function (oEvent) {

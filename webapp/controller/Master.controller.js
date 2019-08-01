@@ -7,8 +7,9 @@ sap.ui.define([
 	"sap/m/GroupHeaderListItem",
 	"sap/ui/Device",
 	"sap/ui/core/Fragment",
-	"../model/formatter"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, Fragment, formatter) {
+	"../model/formatter",
+	"../constants/Constants"
+], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, Fragment, formatter, Constants) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.Master", {
@@ -23,7 +24,7 @@ sap.ui.define([
 		 * Called when the master list controller is instantiated. It sets up the event handling for the master/detail communication and other lifecycle tasks.
 		 * @public
 		 */
-		onInit : function () {
+		onInit: function () {
 			// Control state model
 			var oList = this.byId("list"),
 				oViewModel = this._createViewModel(),
@@ -33,7 +34,7 @@ sap.ui.define([
 				iOriginalBusyDelay = oList.getBusyIndicatorDelay();
 
 			this._oGroupFunctions = {
-				Direction : function(oContext) {
+				Direction: function (oContext) {
 					var iNumber = oContext.getProperty('Direction'),
 						key, text;
 					if (iNumber <= 20) {
@@ -53,15 +54,15 @@ sap.ui.define([
 			this._oList = oList;
 			// keeps the filter and search state
 			this._oListFilterState = {
-				aFilter : [],
-				aSearch : []
+				aFilter: [],
+				aSearch: []
 			};
 
 			this.setModel(oViewModel, "masterView");
 			// Make sure, busy indication is showing immediately so there is no
 			// break after the busy indication for loading the view's meta data is
 			// ended (see promise 'oWhenMetadataIsLoaded' in AppController)
-			oList.attachEventOnce("updateFinished", function(){
+			oList.attachEventOnce("updateFinished", function () {
 				// Restore original busy indicator delay for the list
 				oViewModel.setProperty("/delay", iOriginalBusyDelay);
 			});
@@ -76,6 +77,38 @@ sap.ui.define([
 			this.getRouter().attachBypassed(this.onBypassed, this);
 		},
 
+		SegmentTitleFormatter: function (sFlightId, sDirection) {
+			
+			debugger;
+			
+			// if (sFlightId === null || sFlightId === undefined) {
+			// 	return null;
+			// }
+
+			// // return outbound flight details 
+			// var sPath = this.getView().getBindingContext().getPath();
+			// // get the segment object 
+			// var oFlightSegment = this.getModel().getProperty(sPath);
+
+			// if (sDirection === Constants.FlightSegmentType.ARRIVAL) {
+			// 	if (!sFlightId) {
+			// 		return "No Inbound Flight";
+			// 	}
+
+			// 	// {Precarriercode}{Preflightno} {Predepairp}-{Prearrairp}
+			// 	return oFlightSegment.Precarriercode + oFlightSegment.Preflightno + " " + oFlightSegment.Predepairp + "-" + oFlightSegment.Prearrairp;
+
+			// } else
+			// if (sDirection === Constants.FlightSegmentType.DEPARTURE) {
+			// 	if (!sFlightId) {
+			// 		return "No Outbound Flight"
+			// 	}
+
+			// 	return oFlightSegment.Precarriercode + oFlightSegment.Flightno + " " + oFlightSegment.Prearrairp + "-" + oFlightSegment.Arrairp;
+
+			// }
+		},
+
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
@@ -86,7 +119,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the update finished event
 		 * @public
 		 */
-		onUpdateFinished : function (oEvent) {
+		onUpdateFinished: function (oEvent) {
 			// update the master list object counter after new data is loaded
 			this._updateListItemCount(oEvent.getParameter("total"));
 		},
@@ -99,7 +132,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the search event
 		 * @public
 		 */
-		onSearch : function (oEvent) {
+		onSearch: function (oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
@@ -125,7 +158,7 @@ sap.ui.define([
 		 * and group settings and refreshes the list binding.
 		 * @public
 		 */
-		onRefresh : function () {
+		onRefresh: function () {
 			this._oList.getBinding("items").refresh();
 		},
 
@@ -134,7 +167,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
 		 */
-		onOpenViewSettings : function (oEvent) {
+		onOpenViewSettings: function (oEvent) {
 			var sDialogTab = "filter";
 			if (oEvent.getSource() instanceof sap.m.Button) {
 				var sButtonId = oEvent.getSource().getId();
@@ -150,7 +183,7 @@ sap.ui.define([
 					id: this.getView().getId(),
 					name: "com.legstate.fts.app.FlightAcceptanceCockpit.view.ViewSettingsDialog",
 					controller: this
-				}).then(function(oDialog){
+				}).then(function (oDialog) {
 					// connect dialog to the root view of this component (models, lifecycle)
 					this.getView().addDependent(oDialog);
 					oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
@@ -159,7 +192,7 @@ sap.ui.define([
 			} else {
 				this.byId("viewSettingsDialog").open(sDialogTab);
 			}
-			
+
 		},
 
 		/**
@@ -171,7 +204,7 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the confirm event
 		 * @public
 		 */
-		onConfirmViewSettingsDialog : function (oEvent) {
+		onConfirmViewSettingsDialog: function (oEvent) {
 			var aFilterItems = oEvent.getParameters().filterItems,
 				aFilters = [],
 				aCaptions = [];
@@ -180,14 +213,14 @@ sap.ui.define([
 			// combine the filter array and the filter string
 			aFilterItems.forEach(function (oItem) {
 				switch (oItem.getKey()) {
-					case "Filter1" :
-						aFilters.push(new Filter("Direction", FilterOperator.LE, 100));
-						break;
-					case "Filter2" :
-						aFilters.push(new Filter("Direction", FilterOperator.GT, 100));
-						break;
-					default :
-						break;
+				case "Filter1":
+					aFilters.push(new Filter("Direction", FilterOperator.LE, 100));
+					break;
+				case "Filter2":
+					aFilters.push(new Filter("Direction", FilterOperator.GT, 100));
+					break;
+				default:
+					break;
 				}
 				aCaptions.push(oItem.getText());
 			});
@@ -227,18 +260,15 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent the list selectionChange event
 		 * @public
 		 */
-		onSelectionChange : function (oEvent) {
-			
-			
+		onSelectionChange: function (oEvent) {
+
 			var oList = oEvent.getSource(),
 				bSelected = oEvent.getParameter("selected");
-				
+
 			// get the selected list item
 			var oSelectedItem = oEvent.getParameter("listItem");
-			
+
 			// save the current selected list item path 
-			
-			
 
 			// skip navigation when deselecting an item in multi selection mode
 			if (!(oList.getMode() === "MultiSelect" && !bSelected)) {
@@ -252,7 +282,7 @@ sap.ui.define([
 		 * If there was an object selected in the master list, that selection is removed.
 		 * @public
 		 */
-		onBypassed : function () {
+		onBypassed: function () {
 			this._oList.removeSelections(true);
 		},
 
@@ -264,10 +294,10 @@ sap.ui.define([
 		 * @public
 		 * @returns {sap.m.GroupHeaderListItem} group header with non-capitalized caption.
 		 */
-		createGroupHeader : function (oGroup) {
+		createGroupHeader: function (oGroup) {
 			return new GroupHeaderListItem({
-				title : oGroup.text,
-				upperCase : false
+				title: oGroup.text,
+				upperCase: false
 			});
 		},
 
@@ -276,7 +306,7 @@ sap.ui.define([
 		 * We navigate back in the browser historz
 		 * @public
 		 */
-		onNavBack : function() {
+		onNavBack: function () {
 			// eslint-disable-next-line sap-no-history-manipulation
 			history.go(-1);
 		},
@@ -285,20 +315,19 @@ sap.ui.define([
 		/* begin: internal methods                                     */
 		/* =========================================================== */
 
-
-		_createViewModel : function() {
+		_createViewModel: function () {
 			return new JSONModel({
 				isFilterBarVisible: false,
 				filterBarLabel: "",
 				delay: 0,
-				title: this.getResourceBundle().getText("masterTitleCount", ["...",""]),
+				title: this.getResourceBundle().getText("masterTitleCount", ["...", ""]),
 				noDataText: this.getResourceBundle().getText("masterListNoDataText"),
 				sortBy: "Arrairp",
 				groupBy: "None"
 			});
 		},
 
-		_onMasterMatched :  function() {
+		_onMasterMatched: function () {
 			//Set the layout property of the FCL control to 'OneColumn'
 			this.getModel("appView").setProperty("/layout", "OneColumn");
 		},
@@ -309,7 +338,7 @@ sap.ui.define([
 		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-		_showDetail : function (oItem) {
+		_showDetail: function (oItem) {
 			var bReplace = !Device.system.phone;
 			// set the layout property of FCL control to show two columns
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
@@ -324,7 +353,7 @@ sap.ui.define([
 		 * @param {integer} iTotalItems the total number of items in the list
 		 * @private
 		 */
-		_updateListItemCount : function (iTotalItems) {
+		_updateListItemCount: function (iTotalItems) {
 			var sTitle;
 			// only update the counter if the length is final
 			if (this._oList.getBinding("items").isLengthFinal()) {
@@ -338,7 +367,7 @@ sap.ui.define([
 		 * Internal helper method to apply both filter and search state together on the list binding
 		 * @private
 		 */
-		_applyFilterSearch : function () {
+		_applyFilterSearch: function () {
 			var aFilters = this._oListFilterState.aSearch.concat(this._oListFilterState.aFilter),
 				oViewModel = this.getModel("masterView");
 			this._oList.getBinding("items").filter(aFilters, "Application");
@@ -356,7 +385,7 @@ sap.ui.define([
 		 * @param {string} sFilterBarText the selected filter value
 		 * @private
 		 */
-		_updateFilterBar : function (sFilterBarText) {
+		_updateFilterBar: function (sFilterBarText) {
 			var oViewModel = this.getModel("masterView");
 			oViewModel.setProperty("/isFilterBarVisible", (this._oListFilterState.aFilter.length > 0));
 			oViewModel.setProperty("/filterBarLabel", this.getResourceBundle().getText("masterFilterBarText", [sFilterBarText]));

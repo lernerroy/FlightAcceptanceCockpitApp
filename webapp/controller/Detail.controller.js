@@ -2,9 +2,10 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"../model/formatter",
+	"../constants/Constants",
 	"sap/ui/Device",
 	"sap/m/library"
-], function (BaseController, JSONModel, formatter, Device, mobileLibrary) {
+], function (BaseController, JSONModel, formatter, Constants, Device, mobileLibrary) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
@@ -19,6 +20,7 @@ sap.ui.define([
 		/* =========================================================== */
 
 		onInit: function () {
+
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page is busy indication immediately so there is no break in
 			// between the busy indication fonr loading the view's meta data
@@ -33,6 +35,35 @@ sap.ui.define([
 			this.setModel(oViewModel, "detailView");
 
 			this.getOwnerComponent().getModel().metadataLoaded().then(this._onMetadataLoaded.bind(this));
+		},
+
+		SegmentTitleFormatter: function (sFlightId, sDirection) {
+			if (sFlightId === null || sFlightId === undefined) {
+				return null;
+			}
+
+			// return outbound flight details 
+			var sPath = this.getView().getBindingContext().getPath();
+			// get the segment object 
+			var oFlightSegment = this.getModel().getProperty(sPath);
+
+			if (sDirection === Constants.FlightSegmentType.ARRIVAL) {
+				if (!sFlightId) {
+					return "No Inbound Flight";
+				}
+				
+				// {Precarriercode}{Preflightno} {Predepairp}-{Prearrairp}
+				return oFlightSegment.Precarriercode + oFlightSegment.Preflightno + " " + oFlightSegment.Predepairp + "-" + oFlightSegment.Prearrairp;
+				
+			} else
+			if (sDirection === Constants.FlightSegmentType.DEPARTURE) {
+				if (!sFlightId) {
+					return "No Outbound Flight"
+				}
+				
+				return oFlightSegment.Precarriercode + oFlightSegment.Flightno + " " + oFlightSegment.Prearrairp + "-" + oFlightSegment.Arrairp;
+
+			}
 		},
 
 		onLobSelected: function (oEvent) {
@@ -93,9 +124,9 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched: function (oEvent) {
-			
-			var sObjectId = oEvent.getParameter("arguments").arrFlightNo;
-			var sFlightNo = oEvent.getParameter("arguments").depFlightNo;
+
+			var sObjectId = oEvent.getParameter("arguments").arrFlightNo || '';
+			var sFlightNo = oEvent.getParameter("arguments").depFlightNo || '';
 
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel().metadataLoaded().then(function () {
@@ -151,16 +182,16 @@ sap.ui.define([
 					arrFlightNo: oItem.getProperty("Preaufnr"),
 					depFlightNo: oItem.getProperty("Aufnr")
 				});
-			} else if (sLobType === "CC"){
+			} else if (sLobType === "CC") {
 				oRouter.navTo("CargoCharges", {
 					arrFlightNo: oItem.getProperty("Preaufnr"),
 					depFlightNo: oItem.getProperty("Aufnr")
-				});					
-			} else if (sLobType === "ES"){
+				});
+			} else if (sLobType === "ES") {
 				oRouter.navTo("EngServices", {
 					arrFlightNo: oItem.getProperty("Preaufnr"),
 					depFlightNo: oItem.getProperty("Aufnr")
-				});					
+				});
 			}
 		},
 
@@ -196,8 +227,8 @@ sap.ui.define([
 			// Store original busy indicator delay for the detail view
 			var iOriginalViewBusyDelay = this.getView().getBusyIndicatorDelay(),
 				oViewModel = this.getModel("detailView");
-				// oLineItemTable = this.byId("lineItemsList");
-				// iOriginalLineItemTableBusyDelay = oLineItemTable.getBusyIndicatorDelay();
+			// oLineItemTable = this.byId("lineItemsList");
+			// iOriginalLineItemTableBusyDelay = oLineItemTable.getBusyIndicatorDelay();
 
 			// Make sure busy indicator is displayed immediately when
 			// detail view is displayed for the first time
@@ -214,8 +245,8 @@ sap.ui.define([
 			// Restore original busy indicator delay for the detail view
 			oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
 		},
-		
-		onNavBack: function(){
+
+		onNavBack: function () {
 			this.getRouter().navTo("master", {}, true);
 		},
 
