@@ -1,11 +1,14 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:semantic="sap.f.semantic" xmlns:uxap="sap.uxap" xmlns:html="http://www.w3.org/1999/xhtml" controllerName="com.legstate.fts.app.FlightAcceptanceCockpit.controller.CargoCharges">
-	<semantic:SemanticPage showFooter="true" id="lobPage" busy="{cargoChargesView>/busy}" busyIndicatorDelay="{cargoChargesView>/delay}">
+	<semantic:SemanticPage showFooter="true" id="lobPage" busy="{lobView>/busy}" busyIndicatorDelay="{lobView>/delay}">
 		<!-- Title Heading-->
 		<semantic:titleHeading>
 			<Title text="Cargo Charges"/>
 		</semantic:titleHeading>
 		<semantic:footerCustomActions>
-			<Button icon='{= ${lobView>/editMode} === true ? "sap-icon://display" : "sap-icon://edit"}' press=".toggleEditMode"/>
+			<Button icon="sap-icon://edit" text="Edit" visible='{= !${lobView>/editMode}}' press=".onEditPressed"/>
+			<Button icon="sap-icon://decline" text="Cancel" press=".onCancelEdit" visible='{= ${lobView>/editMode}}'/>
+			<Button icon="sap-icon://accept" text="Save" type="Emphasized" press=".onSaveFlight" visible='{= ${lobView>/editMode}}'/>			
+			<!--<Button icon='{= ${lobView>/editMode} === true ? "sap-icon://display" : "sap-icon://edit"}' press=".toggleEditMode"/>-->
 		</semantic:footerCustomActions>		
 		<semantic:content>
 			<uxap:ObjectPageLayout id="objectPageLayout" enableLazyLoading="false" subSectionLayout="TitleOnLeft" showTitleInHeaderContent="false" showHeaderContent="true"/>
@@ -28,7 +31,7 @@
 			</IconTabBar>
 		</semantic:content>
 		<semantic:closeAction>
-			<semantic:CloseAction id="closeColumn" press=".onNavBack"/>
+			<semantic:CloseAction id="closeColumn" press=".onClose"/>
 		</semantic:closeAction>
 	</semantic:SemanticPage>
 </mvc:View>

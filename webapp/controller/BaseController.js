@@ -59,6 +59,10 @@ sap.ui.define([
 			} else {
 				this.getRouter().navTo("master", {}, true);
 			}
+		},
+		
+		getSharedStateModel: function() {
+			return this.getOwnerComponent().getModel("sharedState");
 		}
 
 	});

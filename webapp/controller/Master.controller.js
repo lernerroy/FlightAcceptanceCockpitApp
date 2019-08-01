@@ -228,8 +228,17 @@ sap.ui.define([
 		 * @public
 		 */
 		onSelectionChange : function (oEvent) {
+			
+			
 			var oList = oEvent.getSource(),
 				bSelected = oEvent.getParameter("selected");
+				
+			// get the selected list item
+			var oSelectedItem = oEvent.getParameter("listItem");
+			
+			// save the current selected list item path 
+			
+			
 
 			// skip navigation when deselecting an item in multi selection mode
 			if (!(oList.getMode() === "MultiSelect" && !bSelected)) {

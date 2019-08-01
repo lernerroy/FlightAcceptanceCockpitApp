@@ -74,6 +74,11 @@
 					"useBatch": false
 				}
 			},
+			"sharedState": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {},
+				"uri": "model/sharedState.json"
+			},
 			"lobs": {
 				"type": "sap.ui.model.json.JSONModel",
 				"settings": {},
@@ -94,35 +99,65 @@
 				"controlId": "layout",
 				"controlAggregation": "midColumnPages",
 				"bypassed": {
-					"target": ["notFound"]
+					"target": [
+						"notFound"
+					]
 				},
 				"async": true
 			},
-			"routes": [{
-				"pattern": "",
-				"name": "master",
-				"target": ["master"]
-			}, {
-				"pattern": "Flight/{arrFlightNo},{depFlightNo}",
-				"name": "object",
-				"target": ["master", "object"]
-			}, {
-				"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
-				"name": "Lob",
-				"target": ["master", "object", "lob"]
-			}, {
-				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/AirportCharges",
-				"name": "AirportCharges",
-				"target": ["master", "object", "airportCharges"]
-			}, {
-				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/CargoCharges",
-				"name": "CargoCharges",
-				"target": ["master", "object", "cargoCharges"]
-			}, {
-				"pattern": "Flight/{arrFlightNo}/{depFlightNo}/EngServices",
-				"name": "EngServices",
-				"target": ["master", "object", "engServices"]
-			}],
+			"routes": [
+				{
+					"pattern": "",
+					"name": "master",
+					"target": [
+						"master"
+					]
+				},
+				{
+					"pattern": "Flight/{arrFlightNo},{depFlightNo}",
+					"name": "object",
+					"target": [
+						"master",
+						"object"
+					]
+				},
+				{
+					"pattern": "Flight/{objectId}/{flightNo}/Lob/{lobType}",
+					"name": "Lob",
+					"target": [
+						"master",
+						"object",
+						"lob"
+					]
+				},
+				{
+					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/AirportCharges",
+					"name": "AirportCharges",
+					"target": [
+						"master",
+						"object",
+						"airportCharges"
+					]
+				},
+				{
+					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/CargoCharges",
+					"name": "CargoCharges",
+					"target": [
+						"master",
+						"object",
+						"cargoCharges"
+					]
+				},
+				{
+					"pattern": "Flight/{arrFlightNo}/{depFlightNo}/EngServices",
+					"name": "EngServices",
+					"target": [
+						"master",
+						"object",
+						"engServices"
+					]
+				}
+			],
 			"targets": {
 				"master": {
 					"viewName": "Master",

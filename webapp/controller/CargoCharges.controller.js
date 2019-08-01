@@ -24,7 +24,7 @@ sap.ui.define([
 			
 			this.setModel(oViewModel, "cargoChargesView");
 
-			this.getRouter().getRoute("CargoCharges").attachPatternMatched(this._onRouteMatched, this);
+			this.getRouter().getRoute("CargoCharges").attachPatternMatched(this.handleRouteMatched, this);
 			
 
 			// store tab bar in object 
@@ -62,16 +62,23 @@ sap.ui.define([
 			}.bind(this));
 		},
 
-		_bindView: function (sObjectPath) {
+		bindView: function (sObjectPath) {
+			
+			// TODO: Here we need to change FlightSegmentHeaderInboundPax and FlightSegmentHeaderOutboundPax
+			// to the entities which are relatd to cargo details 
+			this.loadServices(
+				sObjectPath,
+				"FlightSegmentItemSetCG,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax"
+			);
 
-			// get selected tab key
-			var sSelectedTabKey = this._oTabBar.getSelectedKey();
+			// // get selected tab key
+			// var sSelectedTabKey = this._oTabBar.getSelectedKey();
 
-			// bind passanger details fragment 
-			this._bindCargoDetails(sObjectPath, sSelectedTabKey);
+			// // bind passanger details fragment 
+			// this._bindCargoDetails(sObjectPath, sSelectedTabKey);
 
-			// bind cargo details services fragment 
-			this.loadServices(sObjectPath + "/FlightSegmentItemSetCG");
+			// // bind cargo details services fragment 
+			// this.loadServices(sObjectPath + "/FlightSegmentItemSetCG");
 		},
 		
 		toggleEditMode: function (oEvent) {

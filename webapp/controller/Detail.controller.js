@@ -214,6 +214,10 @@ sap.ui.define([
 			// Restore original busy indicator delay for the detail view
 			oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
 		},
+		
+		onNavBack: function(){
+			this.getRouter().navTo("master", {}, true);
+		},
 
 		/**
 		 * Set the full screen mode to false and navigate to master page

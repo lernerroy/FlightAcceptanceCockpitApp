@@ -20,10 +20,13 @@ sap.ui.define([
 				editMode: false,
 				busy: false,
 				delay: 0,
-				entryIsLocked: false
-			});
+				entryIsLocked: false,
+				entryHasChanged: false
+			}, true);
 
 			this.setModel(oLobView, "lobView");
+
+			sap.ui.getCore().getEventBus().subscribe("Events", "SegmentSelected", function (oEvent) {}, this);
 		},
 
 		// ========================= End of Common Setup/Init =========================
@@ -42,6 +45,7 @@ sap.ui.define([
 
 			// clear the services table 
 			oServicesModel.setData({
+				details: {},
 				allServices: [],
 				currentServices: [],
 				moreServices: []
@@ -64,6 +68,8 @@ sap.ui.define([
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 
 			this.getModel().metadataLoaded().then(function () {
+
+				debugger;
 
 				var sObjectPath = this.getModel().createKey("FlightSegmentHeaderSet", {
 					Preaufnr: this.oRouteArgs.arrFlightNo,
@@ -98,7 +104,62 @@ sap.ui.define([
 
 		// ========================= Common Action Handlers =========================
 
+		onClose: function (oEvent) {
+
+			var self = this;
+
+			var oLobModel = this.getLobModel();
+
+			// If the user made changes to the flight 
+			// Present him a dialog that will ask him if he like 
+			// to: 1. Save the changes and continue, 2. Revert changes and continue
+			if (oLobModel.getData().entryHasChanged === true) {
+
+				MessageBox.alert("Do you want to save the document first?", {
+					title: "Leave Flight",
+					actions: [
+						MessageBox.Action.CANCEL,
+						MessageBox.Action.NO,
+						MessageBox.Action.YES
+					],
+					onClose: function (sAction) {
+						if (sAction === MessageBox.Action.YES) {
+							// TODO: Save entry and dequeue flight 
+						} else if (sAction === MessageBox.Action.NO) {
+							self.executeDequeueSegmentAction(function () {
+								self.getLobModel().setProperty("/entryHasChanged", false);
+								self.getLobModel().setProperty("/editMode", false);
+								self.onNavBack();
+							});
+						}
+					}
+				});
+			} else if (oLobModel.getData().entryIsLocked === true) {
+
+				this.executeDequeueSegmentAction(function () {
+					self.getLobModel().setProperty("/editMode", false);
+					self.onNavBack();
+				})
+
+			} else {
+				self.getLobModel().setProperty("/editMode", false);
+				self.onNavBack();
+			}
+		},
+
 		onEditPressed: function (oEvent) {
+
+			var self = this;
+
+			this.executeEnququeSegmentAction(function (bIsLocked) {
+
+			}, true)
+
+		},
+
+		executeEnququeSegmentAction: function (fnSuccess, bShowBusyDialog) {
+
+			var self = this;
 
 			// Get the flight number by the current selected direction
 			// (Arrival or Departure)
@@ -108,25 +169,26 @@ sap.ui.define([
 				return;
 			}
 
-			// Here we need to make a call to the service to enqueu this record
-			// if the service call will succeed then we can go into edit mode
-			var oDataModel = this.getModel();
+			var oBusyDialog = null;
 
-			var self = this;
+			if (bShowBusyDialog) {
+				oBusyDialog = new BusyDialog(null, "Enqueue...");
+				oBusyDialog.present(this.getView());
+			}
 
-			var oDialog = new BusyDialog(null, "Enqueue...");
-			oDialog.present(this.getView());
-
-			oDataModel.callFunction("/EnqueueSegment", {
+			this.getModel().callFunction("/EnqueueSegment", {
 				method: "POST",
 				urlParameters: {
 					"FlightNumber": sFlightNumber
 				},
 				success: function (oData, response) {
-					oDialog.dismiss();
+					if (oBusyDialog) {
+						oBusyDialog.dismiss();
+					}
 					var result = oData.EnqueueSegment;
-					if (oData.IsLocked === true) {
+					if (result.IsLocked === true) {
 						self.getLobModel().setProperty("/entryIsLocked", true);
+						self.getSharedStateModel().setProperty("/entryIsLocked", true);
 						// modify the lob view model that we're in edit mode
 						self.getLobModel().setProperty("/editMode", true);
 					} else {
@@ -134,26 +196,67 @@ sap.ui.define([
 						MessageBox.alert(result.Error);
 						self.getLobModel().setProperty("/entryIsLocked", false);
 					}
+
+					fnSuccess(result.IsLocked);
 				},
 				error: function (oErr) {
-					oDialog.dismiss();
+					if (oBusyDialog) {
+						oBusyDialog.dismiss();
+					}
 					// Error handling here
 				}
 			});
+		},
 
+		executeDequeueSegmentAction: function (fnSuccess) {
+
+			// Get the flight number by the current selected direction
+			// (Arrival or Departure)
+			var sFlightNumber = this.getFlightNumberByDirection();
+
+			if (!sFlightNumber) {
+				return;
+			}
+
+			var self = this;
+
+			var oDialog = new BusyDialog(null, "Dequeue...");
+			oDialog.present(this.getView());
+
+			this.getModel().callFunction("/DequeueSegment", {
+				method: "POST",
+				urlParameters: {
+					"FlightNumber": sFlightNumber
+				},
+				success: function (oData, response) {
+					oDialog.dismiss();
+					self.getLobModel().setProperty("/entryIsLocked", false);
+					fnSuccess(oData, response);
+				},
+				error: function (oErr) {
+					oDialog.dismiss();
+				}
+			});
 		},
 
 		onCancelEdit: function (oEvent) {
 			// cancel edit mode
-			this.getLobModel().setProperty("/editMode", false);
+			var self = this;
+			this.executeDequeueSegmentAction(function () {
+				self.getLobModel().setProperty("/editMode", false);
+			});
 		},
 
 		onServiceQuantityChanged: function (oEvent) {
 
-			debugger;
-
 			// get the parent row where this input field is located
 			var oParent = oEvent.getSource().getParent();
+
+			// Modify the Lob model state that the entry has changed			
+			this.getLobModel().setProperty("/entryHasChanged", true);
+
+			// update the shared state model that the entry has been changed
+			this.getSharedStateModel().setProperty("/entryHasChanged", true);
 
 			// get the binding path of this row 
 
@@ -163,65 +266,26 @@ sap.ui.define([
 
 		// ========================= Flight Services =========================
 
-		loadServices: function (sObjectPath) {
+		loadServices: function (sObjectPath, sExpand) {
 
 			var oDataModel = this.getModel();
+			
+			this.getLobModel().setProperty("/busy",true);
 
 			var self = this; // save context 
 
 			// Get all services from the server 
 			oDataModel.read(sObjectPath, {
+				urlParameters: {
+					"$expand": sExpand
+				},
 				success: function (response, oData) {
+					self.getLobModel().setProperty("/busy",false);
 					// handle the loaded services
-					self.handleServicesLoaded(oData.data.results)
-
+					self.handleFlightSegmentLoaded(oData.data)
 				},
 				error: function (oError) {}
 			});
-
-			// var sFragmentId = null;
-			// var sBindingPath = "";
-			// var aFilters = [];
-
-			// if (sSelectedTabKey === "ARR") {
-			// 	sFragmentId = this.getView().createId("arrServices");
-			// 	sBindingPath = sObjectPath + "/FlightSegmentItemSetAC";
-			// 	var arrFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 1);
-			// 	aFilters.push(arrFilter);
-			// } else if (sSelectedTabKey === "DEP") {
-			// 	sFragmentId = this.getView().createId("depServices");
-			// 	sBindingPath = sObjectPath + "/FlightSegmentItemSetAC";
-			// 	var depFilter = new Filter("Direction", sap.ui.model.FilterOperator.EQ, 2);
-			// 	aFilters.push(depFilter);
-			// }
-
-			// var oServicesTable = sap.ui.core.Fragment.byId(sFragmentId, "servicesTable");
-
-			// if (!this.oTemplate) {
-			// 	this.oTemplate = oServicesTable.getItems()[0];
-			// 	oServicesTable.removeAllItems();
-			// }
-
-			// if (!oServicesTable.getBinding("items")) {
-
-			// 	var oViewModel = this.getModel("airportChargesView");
-
-			// 	// bind the services table 
-			// 	oServicesTable.bindAggregation("items", {
-			// 		path: sBindingPath,
-			// 		template: this.oTemplate,
-			// 		filters: aFilters,
-			// 		events: {
-			// 			change: function (oEvent) {},
-			// 			dataRequested: function (oEvent) {
-			// 				oViewModel.setProperty("/busy", true);
-			// 			},
-			// 			dataReceived: function (oEvent) {
-			// 				oViewModel.setProperty("/busy", false);
-			// 			}
-			// 		}
-			// 	});
-			// }
 		},
 
 		_getDirection: function () {
@@ -232,7 +296,7 @@ sap.ui.define([
 		 * 
 		 * 
 		 * */
-		handleServicesLoaded: function (aServices) {
+		handleFlightSegmentLoaded: function (oFlightSegment) {
 
 			// here we map all entry sheet services 
 			// and routine services into a dedicated JSON model
@@ -240,14 +304,20 @@ sap.ui.define([
 			// services table and these are actually the services that this LOB has
 			// more services are services that can be added 
 			var oServicesModel = new JSONModel({
-				allServices: aServices, // all services from server 
+				flightSegment: oFlightSegment,
+				// allServices: aServices, // all services from server 
 				currentServices: [], // current services that will be displayed on table 
 				moreServices: [], // more services that will be displayed on table 
+				inboundDetails: {},
+				outboundDetails: {},
+				details: {}, // details to present 
 				1: {
+					details: {},
 					currentServices: [], // current services for inbound flight
 					moreServices: [], // more services for inbound flight
 				},
 				2: {
+					details: {},
 					currentServices: [], // current services for outbound flight 
 					moreServices: [], // more services for outbound flight
 				}
@@ -278,11 +348,15 @@ sap.ui.define([
 			// from the inbound/outbound list 
 			oServicesModel.setProperty("/currentServices", oServicesModel.getProperty("/" + nDirection + "/currentServices"));
 			oServicesModel.setProperty("/moreServices", oServicesModel.getProperty("/" + nDirection + "/moreServices"));
+			oServicesModel.setProperty("/details", oServicesModel.getProperty("/" + nDirection + "/details"));
 
 			// refresh model to apply changes to the UI
 			oServicesModel.refresh(true);
 		},
 
+		/**
+		 * 
+		 * */
 		mapAndBindServices: function () {
 
 			// make sure that the services has been loaded
@@ -292,7 +366,10 @@ sap.ui.define([
 				return;
 			}
 
-			var aServices = oServicesModel.getProperty("/allServices");
+			// get the full flight segment object 
+			var oFlightSegment = oServicesModel.getProperty("/flightSegment");
+
+			var aServices = this._getServicesByLob(oFlightSegment);
 
 			// get all directions from services and map them into array 
 			var aDirections = _.map(_.uniqBy(aServices, function (oSrv) {
@@ -300,9 +377,23 @@ sap.ui.define([
 			}), function (oSrv) {
 				return oSrv.Direction;
 			});
+			
+			var self = this;
 
 			// iterate on direction and collect all services per direction
 			_.forEach(aDirections, function (nDirection) {
+				
+				var details = {};
+
+				// Map arrival and departure details to model
+				// We need to change this implementation soon as the server 
+				// side will have one entity set that will contain both directions 	
+				// TODO: Change this code when the server will made the changes 
+				if (nDirection === 1) {
+					details = self._getInboundDetailsByLob(oFlightSegment);
+				} else if (nDirection === 2) {
+					details = self._getOutboundDetailsByLob(oFlightSegment);
+				}
 
 				let aEntrySheetServices = _.filter(aServices, function (s) {
 					// TODO: request from Roy to replace it to Edm.Boolean
@@ -320,6 +411,7 @@ sap.ui.define([
 					});
 
 					oServicesModel.setProperty("/" + nDirection, {
+						details: details,
 						currentServices: aEntrySheetServices,
 						moreServices: aMoreServices
 					});
@@ -338,12 +430,49 @@ sap.ui.define([
 					});
 
 					oServicesModel.setProperty("/" + nDirection, {
-						currentServices: aEntrySheetServices,
+						details: details,
+						currentServices: aRoutineServices,
 						moreServices: aMoreServices
 					});
 				}
-
 			});
+		},
+
+		_getServicesByLob: function (oFlightSegment) {
+
+			// get the flight services model 
+
+			var sLob = this.getLobModel().getProperty("/lobType");
+			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
+				return oFlightSegment.FlightSegmentItemSetAC.results;
+			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
+				return oFlightSegment.FlightSegmentItemSetCG.results;
+			} else if (sLob === Constants.LobType.ENG_SERVICES) {
+				// TODO: implement engineering services here ! 
+				return null;
+			}
+		},
+
+		_getInboundDetailsByLob: function (oFlightSegment) {
+
+			var sLob = this.getLobModel().getProperty("/lobType");
+
+			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
+				return oFlightSegment.FlightSegmentHeaderInboundPax;
+			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
+				return oFlightSegment.FlightSegmentHeaderInboundPax;
+			}
+		},
+
+		_getOutboundDetailsByLob: function (oFlightSegment) {
+
+			var sLob = this.getLobModel().getProperty("/lobType");
+
+			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
+				return oFlightSegment.FlightSegmentHeaderOutboundPax;
+			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
+				return oFlightSegment.FlightSegmentHeaderOutboundPax;
+			}
 		},
 
 		/**
