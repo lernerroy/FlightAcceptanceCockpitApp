@@ -397,9 +397,7 @@ sap.ui.define([
 			oServicesModel.refresh();
 		},
 
-		/**
-		 * 
-		 * */
+		
 		mapAndBindServices: function () {
 
 			// make sure that the services has been loaded
@@ -413,6 +411,20 @@ sap.ui.define([
 			var oFlightSegment = oServicesModel.getProperty("/flightSegment");
 
 			var aServices = this._getServicesByLob(oFlightSegment);
+			
+			// map usage type to services 
+			
+			for (var i = 0; i < aServices.length; i++){
+				var oService = aServices[i];
+				if (!oService.UsageTypeString){
+					continue;
+				}
+				
+				// split the UsageTypeString by ; into usage types array
+				oService.usageTypes = _.map(_.split(oService.UsageTypeString,';'),function(usageType){
+					return { name: usageType };
+				});
+			}
 
 			// get all directions from services and map them into array 
 			var aDirections = _.map(_.uniqBy(aServices, function (oSrv) {

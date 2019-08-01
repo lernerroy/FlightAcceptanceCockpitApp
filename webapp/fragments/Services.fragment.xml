@@ -33,9 +33,11 @@
 					<m:Input type="Number" value="{flightServices>Quantity}" editable="{lobView>/editMode}" change=".onServiceQuantityChanged"/>
 					<m:Text
 						text="{ parts: [ {path: 'flightServices>TotalPrice'}, {path: 'flightServices>CtrWaers'} ], type: 'sap.ui.model.type.Currency', formatOptions: { showMeasure: true, decimals: 1, style: 'short' } }"/>
-					<m:Text text="{flightServices>CtrUsageType}"/>
-					<m:Button icon="sap-icon://delete" type="Transparent" visible="true"
-						press="onRemoveService"/>
+					<m:ComboBox editable="{lobView>/editMode}" items="{ path: 'flightServices>usageTypes', sorter: { path: 'text' } }">
+						<core:Item key="{flightServices>name}" text="{flightServices>name}"/>
+					</m:ComboBox>
+					<!--<m:Text text="{flightServices>CtrUsageType}"/>-->
+					<m:Button icon="sap-icon://delete" type="Transparent" visible="true" press="onRemoveService"/>
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

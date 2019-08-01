@@ -12,23 +12,34 @@
 		</semantic:footerCustomActions>		
 		<semantic:content>
 			<uxap:ObjectPageLayout id="objectPageLayout" enableLazyLoading="false" subSectionLayout="TitleOnLeft" showTitleInHeaderContent="false" showHeaderContent="true"/>
-			<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected" backgroundDesign="Translucent" headerBackgroundDesign="Transparent">
+			<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected"
+				backgroundDesign="Transparent" expandable="false" items="{flightServices>/tabs}">
 				<items>
-					<IconTabFilter key="ARR" id="arrivalTab" design="Horizontal" text="Arrival" icon="sap-icon://fa/arrival">
-						<ScrollContainer id="scrollContArrival" width="100%" height="100%" horizontal="false" vertical="true">
-							<core:Fragment id="arrCargoDetails" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails" type="XML"/>
-							<core:Fragment id="arrServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
-						</ScrollContainer>
-					</IconTabFilter>
-					<IconTabSeparator icon=""/>
-					<IconTabFilter key="DEP" id="depatureTab" design="Horizontal" text="Departure" icon="sap-icon://fa/departure">
+					<IconTabFilter key="{flightServices>key}" text="{flightServices>title}" icon="{flightServices>icon}">
 						<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">
-							<core:Fragment id="depCargoDetails" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails" type="XML"/>
-							<core:Fragment id="depServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
+							<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails" type="XML"/>
+							<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
 						</ScrollContainer>
 					</IconTabFilter>
 				</items>
-			</IconTabBar>
+			</IconTabBar>			
+			<!--<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected" backgroundDesign="Translucent" headerBackgroundDesign="Transparent">-->
+			<!--	<items>-->
+			<!--		<IconTabFilter key="ARR" id="arrivalTab" design="Horizontal" text="Arrival" icon="sap-icon://fa/arrival">-->
+			<!--			<ScrollContainer id="scrollContArrival" width="100%" height="100%" horizontal="false" vertical="true">-->
+			<!--				<core:Fragment id="arrCargoDetails" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails" type="XML"/>-->
+			<!--				<core:Fragment id="arrServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
+			<!--			</ScrollContainer>-->
+			<!--		</IconTabFilter>-->
+			<!--		<IconTabSeparator icon=""/>-->
+			<!--		<IconTabFilter key="DEP" id="depatureTab" design="Horizontal" text="Departure" icon="sap-icon://fa/departure">-->
+			<!--			<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">-->
+			<!--				<core:Fragment id="depCargoDetails" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails" type="XML"/>-->
+			<!--				<core:Fragment id="depServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
+			<!--			</ScrollContainer>-->
+			<!--		</IconTabFilter>-->
+			<!--	</items>-->
+			<!--</IconTabBar>-->
 		</semantic:content>
 		<semantic:closeAction>
 			<semantic:CloseAction id="closeColumn" press=".onClose"/>

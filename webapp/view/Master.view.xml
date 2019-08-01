@@ -32,11 +32,11 @@
 				<items>
 					<CustomListItem type="Navigation" press=".onSelectionChange">
 						<VBox fitContainer="true">
-							<HBox>
+							<HBox visible="{= ${Preaufnr} !== ''}">
 								<core:Icon size="1.5rem" src="sap-icon://fa/arrival" class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
-									<Title text="{ parts: [{path: 'Preaufnr'}, {value: 'ARR'}], formatter: '.SegmentTitleFormatter' }"></Title>
-									<!--<Title text="{Precarriercode}{Preflightno}" level="H4"/>-->
+									<!--<Title text="{ parts: [{path: 'Preaufnr'}, {value: 'ARR'}], formatter: '.SegmentTitleFormatter' }"></Title>-->
+									<Title text="{Precarriercode}{Preflightno}" level="H4"/>
 									<HBox visible="{= ${Preaufnr} !== ''}">
 										<Text text="{Predepairp}" class="sapUiTinyMarginEnd"/>
 										<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
@@ -46,11 +46,11 @@
 									</HBox>
 								</VBox>
 							</HBox>
-							<HBox>
+							<HBox visible="{= ${Aufnr} !== ''}">
 								<core:Icon size="1.5rem" src="sap-icon://fa/departure" class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
 								<VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
-									<!--<Title text="{Carriercode}{Flightno}" level="H4"/>-->
-									<Title text="{ parts: [{path: 'Aufnr'}, {value: 'DEP'}], formatter: '.SegmentTitleFormatter' }"></Title>
+									<Title text="{Carriercode}{Flightno}" level="H4"/>
+									<!--<Title text="{ parts: [{path: 'Aufnr'}, {value: 'DEP'}], formatter: '.SegmentTitleFormatter' }"></Title>-->
 									<HBox visible="{= ${Aufnr} !== ''}">
 										<Text text="{Prearrairp}" class="sapUiTinyMarginEnd"/>
 										<core:Icon src="sap-icon://arrow-right" class="sapUiTinyMarginEnd"/>
