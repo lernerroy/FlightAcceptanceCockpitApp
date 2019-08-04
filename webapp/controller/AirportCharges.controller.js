@@ -45,70 +45,70 @@ sap.ui.define([
 			this.loadServices(sObjectPath, "FlightSegmentItemSetAC,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax");
 		},
 
-		onTabSelected: function (oEvent) {
+		// onTabSelected: function (oEvent) {
 			
 
-			var oLobModel = this.getLobModel();
+		// 	var oLobModel = this.getLobModel();
 
-			// Save the tab key that the user want to see 
-			var sRequestedSelectedTabKey = oEvent.getParameter("selectedKey");
+		// 	// Save the tab key that the user want to see 
+		// 	var sRequestedSelectedTabKey = oEvent.getParameter("selectedKey");
 
-			var self = this;
+		// 	var self = this;
 
-			// If the user made changes to the flight 
-			// Present him a dialog that will ask him if he like 
-			// to: 1. Save the changes and continue, 2. Revert changes and continue
-			if (oLobModel.getData().entryHasChanged === true) {
+		// 	// If the user made changes to the flight 
+		// 	// Present him a dialog that will ask him if he like 
+		// 	// to: 1. Save the changes and continue, 2. Revert changes and continue
+		// 	if (oLobModel.getData().entryHasChanged === true) {
 
-				MessageBox.alert("Do you want to save the document first?", {
-					title: "Leave Flight",
-					actions: [
-						MessageBox.Action.CANCEL,
-						MessageBox.Action.NO,
-						MessageBox.Action.YES
-					],
-					onClose: function (sAction) {
-						if (sAction === MessageBox.Action.YES) {
-							// TODO: Save entry and dequeue flight 
-						} else if (sAction === MessageBox.Action.NO) {
-							self.executeDequeueSegmentAction(function () {
-								self.getLobModel().setProperty("/entryHasChanged", false);
-								self._oTabBar.setSelectedKey(sRequestedSelectedTabKey);
-								self._handleTabSelection(sRequestedSelectedTabKey);
-							});
-						}
-					}
-				});
+		// 		MessageBox.alert("Do you want to save the document first?", {
+		// 			title: "Leave Flight",
+		// 			actions: [
+		// 				MessageBox.Action.CANCEL,
+		// 				MessageBox.Action.NO,
+		// 				MessageBox.Action.YES
+		// 			],
+		// 			onClose: function (sAction) {
+		// 				if (sAction === MessageBox.Action.YES) {
+		// 					// TODO: Save entry and dequeue flight 
+		// 				} else if (sAction === MessageBox.Action.NO) {
+		// 					self.executeDequeueSegmentAction(function () {
+		// 						self.getLobModel().setProperty("/entryHasChanged", false);
+		// 						self._oTabBar.setSelectedKey(sRequestedSelectedTabKey);
+		// 						self._handleTabSelection(sRequestedSelectedTabKey);
+		// 					});
+		// 				}
+		// 			}
+		// 		});
 
-				// cancel tab selection
-				this._oTabBar.setSelectedKey(this._sCurrentSelectedTabKey);
+		// 		// cancel tab selection
+		// 		this._oTabBar.setSelectedKey(this._sCurrentSelectedTabKey);
 
-			} else if (oLobModel.getData().entryIsLocked === true) {
+		// 	} else if (oLobModel.getData().entryIsLocked === true) {
 
-				this.executeDequeueSegmentAction(function () {
-					self._handleTabSelection(sRequestedSelectedTabKey);
-				})
+		// 		this.executeDequeueSegmentAction(function () {
+		// 			self._handleTabSelection(sRequestedSelectedTabKey);
+		// 		})
 
-			} else {
-				this._handleTabSelection(sRequestedSelectedTabKey);
-			}
-		},
+		// 	} else {
+		// 		this._handleTabSelection(sRequestedSelectedTabKey);
+		// 	}
+		// },
 
-		_handleTabSelection: function (sSelectedTabKey) {
+		// _handleTabSelection: function (sSelectedTabKey) {
 
-			var sBindingPath = "/" + this.sObjectPath;
+		// 	var sBindingPath = "/" + this.sObjectPath;
 
-			// Disable edit model when we move to another tab
-			this.getLobModel().setProperty("/editMode", false);
+		// 	// Disable edit model when we move to another tab
+		// 	this.getLobModel().setProperty("/editMode", false);
 
-			// bind passanger details 
-			// this._bindPassangerDetails(sBindingPath, sSelectedTabKey);
+		// 	// bind passanger details 
+		// 	// this._bindPassangerDetails(sBindingPath, sSelectedTabKey);
 
-			this.renderServicesByDirection();
+		// 	this.renderServicesByDirection();
 
-			// Save the current selected tab
-			this._sCurrentSelectedTabKey = sSelectedTabKey;
-		},
+		// 	// Save the current selected tab
+		// 	this._sCurrentSelectedTabKey = sSelectedTabKey;
+		// },
 
 		_bindPassangerDetails: function (sObjectPath, sSelectedTabKey) {
 

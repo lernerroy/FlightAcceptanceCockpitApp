@@ -81,18 +81,18 @@ sap.ui.define([
 			oLobModel.setProperty("/editMode", !isInEditMode);
 		},		
 
-		onTabSelected: function (oEvent) {
+		// onTabSelected: function (oEvent) {
 
-			var sBindingPath = "/" + this.sObjectPath;
-			var sSelectedKey = oEvent.getParameter("selectedKey");
+		// 	var sBindingPath = "/" + this.sObjectPath;
+		// 	var sSelectedKey = oEvent.getParameter("selectedKey");
 
-			// bind cargo details 
-			this._bindCargoDetails(sBindingPath, sSelectedKey);
+		// 	// bind cargo details 
+		// 	this._bindCargoDetails(sBindingPath, sSelectedKey);
 
-			// bind services 			
-			this._bindCargoServices(sBindingPath, sSelectedKey);
+		// 	// bind services 			
+		// 	this._bindCargoServices(sBindingPath, sSelectedKey);
 
-		},
+		// },
 
 		_bindCargoDetails: function (sObjectPath, sSelectedTabKey) {
 
@@ -114,9 +114,11 @@ sap.ui.define([
 			if (sCargoDetailsFragmentId === undefined) {
 				return;
 			}
+			
+			
 
 			// get passanger details grid
-			var oCargoDetailsGrid = sap.ui.core.Fragment.byId(sCargoDetailsFragmentId, "gridPassDetails");
+			var oCargoDetailsGrid = sap.ui.core.Fragment.byId(sCargoDetailsFragmentId, "formPassDetails");
 
 			// bind grid only when needed
 			if (!oCargoDetailsGrid.getBindingContext()) {
