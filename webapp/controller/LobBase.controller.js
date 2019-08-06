@@ -27,7 +27,13 @@ sap.ui.define([
 
 			this.setModel(oLobView, "lobView");
 
-			sap.ui.getCore().getEventBus().subscribe("Events", "SegmentSelected", function (oEvent) {}, this);
+			window.onhashchange = function(){
+				if (window.innerDocClick){
+					
+				} else {
+					debugger;	
+				}
+			};
 		},
 
 		// ========================= End of Common Setup/Init =========================
@@ -294,7 +300,7 @@ sap.ui.define([
 						self.getLobModel().setProperty("/entryIsLocked", true);
 						self.getSharedStateModel().setProperty("/entryIsLocked", true);
 						// modify the lob view model that we're in edit mode
-						self.getLobModel().setProperty("/editMode", true);
+						// self.getLobModel().setProperty("/editMode", true);
 					} else {
 						// present error message that we cannot enqueu this object
 						MessageBox.alert(result.Error);
@@ -364,7 +370,15 @@ sap.ui.define([
 		},
 
 		_toggleEditMode: function (bEditMode) {
+			
+			var bIsInEditMode = this.getLobModel().getProperty("/editMode");
+			
+			if (bEditMode === bIsInEditMode){
+				return;
+			}
+			
 			if (bEditMode) {
+				this.getLobModel().setProperty("/editMode", true);
 				this.getModel("appView").setProperty("/layout", "MidColumnFullScreen");
 				MessageToast.show("Edit mode enabled");
 			} else {
@@ -705,7 +719,7 @@ sap.ui.define([
 			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
 				return oFlightSegment.FlightSegmentHeaderInboundPax;
 			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
-				return oFlightSegment.FlightSegmentHeaderInboundPax;
+				return oFlightSegment.FlightSegmentHeaderInboundCargo;
 			}
 		},
 
@@ -716,7 +730,7 @@ sap.ui.define([
 			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
 				return oFlightSegment.FlightSegmentHeaderOutboundPax;
 			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
-				return oFlightSegment.FlightSegmentHeaderOutboundPax;
+				return oFlightSegment.FlightSegmentHeaderOutboundCargo;
 			}
 		},
 

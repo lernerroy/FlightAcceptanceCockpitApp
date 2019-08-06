@@ -21,24 +21,6 @@
 					</IconTabFilter>
 				</items>
 			</IconTabBar>
-			<!--<items>-->
-			<!--	<IconTabFilter visible="{= ${flightServices>Preaufnr} === '' ? false : true}" key="ARR" id="arrivalTab" design="Horizontal" text="Arrival" icon="sap-icon://fa/arrival">-->
-			<!--		<ScrollContainer id="scrollContArrival" width="100%" height="100%" horizontal="false" vertical="true">-->
-			<!--			<core:Fragment id="arrPassangerInfoFragment" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails"-->
-			<!--				type="XML"/>-->
-			<!--			<core:Fragment id="arrServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
-			<!--		</ScrollContainer>-->
-			<!--	</IconTabFilter>-->
-			<!--	<IconTabSeparator id="tabsSeparator" icon=""/>-->
-			<!--	<IconTabFilter visible="{= ${flightServices>Aufnr} === '' ? false : true}" key="DEP" id="depatureTab" design="Horizontal" text="Departure" icon="sap-icon://fa/departure">-->
-			<!--		<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">-->
-			<!--			<core:Fragment id="depPassangerInfoFragment" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.PassangerDetails"-->
-			<!--				type="XML"/>-->
-			<!--			<core:Fragment id="depServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
-			<!--		</ScrollContainer>-->
-			<!--	</IconTabFilter>-->
-			<!--</items>-->
-			<!--</IconTabBar>-->
 		</semantic:content>
 		<semantic:closeAction>
 			<semantic:CloseAction id="closeColumn" press=".onClose"/>

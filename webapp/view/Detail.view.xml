@@ -84,14 +84,15 @@
 								<uxap:blocks>
 									<f:GridList width="100%" items="{ path: 'lobs>/' }" itemPress=".onLobSelected">
 										<CustomListItem type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
-											<HBox justifyContent="SpaceBetween" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
-												<Title text="{lobs>title}" level="H3" titleStyle="H3" class="sapUiSmallMarginEnd"/>
-												<Image width="10rem" height="5rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}"/>
+											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
+												<Image height="5rem" width="5rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
+												<Title text="{lobs>title}" level="H4" titleStyle="H4" class="sapUiSmallMarginEnd"/>
+												
 											</HBox>
 										</CustomListItem>
 										<f:customLayout>
 											<!--Represnts the number of items in each grid row  -->
-											<grid:GridBoxLayout boxesPerRowConfig="XL1 L1 M1 S1"/>
+											<grid:GridBoxLayout boxesPerRowConfig="XL3 L2 M2 S1"/>
 										</f:customLayout>
 									</f:GridList>
 								</uxap:blocks>
