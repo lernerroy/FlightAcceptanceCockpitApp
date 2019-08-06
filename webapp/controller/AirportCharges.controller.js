@@ -44,6 +44,10 @@ sap.ui.define([
 		bindView: function (sObjectPath) {
 			this.loadServices(sObjectPath, "FlightSegmentItemSetAC,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax");
 		},
+		
+		refreshFlightSegment: function(sObjectPath){
+			this.loadServices(sObjectPath, "FlightSegmentItemSetAC,FlightSegmentHeaderInboundPax,FlightSegmentHeaderOutboundPax");
+		},
 
 		// onTabSelected: function (oEvent) {
 			

@@ -43,15 +43,26 @@ sap.ui.define([
 		 * @private
 		 */
 		_showServiceError : function (sDetails) {
+			
 			if (this._bMessageOpen) {
 				return;
 			}
 			this._bMessageOpen = true;
+			
+			var sMessage = sDetails.message || sDetails;
+			
+			// if response text exists then parse the response test 
+			// to JSON object 
+			if (sDetails.responseText){
+				var oResJson = JSON.parse(sDetails.responseText);
+				sMessage = oResJson.error.message.value;
+			}
+			
 			MessageBox.error(
-				this._sErrorText,
+				sMessage,
 				{
 					id : "serviceErrorMessageBox",
-					details : sDetails,
+					details : "",
 					styleClass : this._oComponent.getContentDensityClass(),
 					actions : [MessageBox.Action.CLOSE],
 					onClose : function () {

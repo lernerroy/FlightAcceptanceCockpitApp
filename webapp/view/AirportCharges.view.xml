@@ -8,7 +8,6 @@
 			<Button icon="sap-icon://edit" text="Edit" visible='{= !${lobView>/editMode}}' press=".onEditPressed"/>
 			<Button icon="sap-icon://decline" text="Cancel" press=".onCancelEdit" visible='{= ${lobView>/editMode}}'/>
 			<Button icon="sap-icon://accept" text="Save" type="Emphasized" press=".onSaveFlight" visible='{= ${lobView>/editMode}}'/>
-			<!--<Button icon='{= ${lobView>/editMode} === true ? "sap-icon://display" : "sap-icon://edit"}' press=".toggleEditMode"/>-->
 		</semantic:footerCustomActions>
 		<semantic:content>
 			<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected"

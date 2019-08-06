@@ -5,8 +5,9 @@ sap.ui.define([
 	"com/legstate/fts/app/FlightAcceptanceCockpit/vendor/lodash.min",
 	"../constants/Constants",
 	"com/legstate/fts/app/FlightAcceptanceCockpit/dialog/BusyDialogController",
-	"sap/m/MessageBox"
-], function (Controller, BaseController, JSONModel, lodash, Constants, BusyDialog, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/m/MessageToast"
+], function (Controller, BaseController, JSONModel, lodash, Constants, BusyDialog, MessageBox, MessageToast) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.LobBase", {
@@ -35,7 +36,6 @@ sap.ui.define([
 
 		unbindData: function () {
 
-
 			var oServicesModel = this.getModel("flightServices");
 
 			if (!oServicesModel) {
@@ -50,10 +50,9 @@ sap.ui.define([
 				moreServices: [],
 				tabs: []
 			});
-			
+
 			oServicesModel.refresh();
-			
-			
+
 		},
 
 		getLobModel: function () {
@@ -106,6 +105,14 @@ sap.ui.define([
 
 		// ========================= Common Action Handlers =========================
 
+		onSaveFlight: function (oEvent) {
+			// When on save flight pressed we execute call to the server 
+			// to update the flight segment header entity 
+			// we use deep create and build the deep create payload 
+			// according to the current selected segment 
+			this.createDeepEntry();
+		},
+
 		onClose: function (oEvent) {
 
 			var self = this;
@@ -154,8 +161,103 @@ sap.ui.define([
 			var self = this;
 
 			this.executeEnququeSegmentAction(function (bIsLocked) {
-
+				self._toggleEditMode(true);
 			}, true)
+
+		},
+
+		createDeepEntry: function () {
+
+			let nDirection = this._getDirection() === Constants.FlightSegmentType.ARRIVAL ? 1 : 2;
+
+			var oFlightSegment = this.getServicesModel();
+			var oDataModel = this.getModel();
+
+			// The deep entity path will be on the 
+			// whole flight segment 
+			var sPath = "/FlightSegmentHeaderSet";
+
+			var oPayload = {
+				Aufnr: this.oRouteArgs.depFlightNo || '',
+				Preaufnr: this.oRouteArgs.arrFlightNo || ''
+			};
+
+			// Build payload according to the 
+			// current segment direction and data
+			var sDirection = this._getDirection();
+
+			// entity names where we need to 
+			// set services path ahead of 
+			// execute the create entity call 			
+			var sServicesEntityName = null;
+			var sServicesModelPath = null;
+
+			var sLob = this.getLobModel().getProperty("/lobType");
+			sServicesEntityName = "FlightSegmentItemSetAC";
+			if (sLob === Constants.LobType.AIRPORT_CHARGES) {
+				sServicesEntityName = "FlightSegmentItemSetAC";
+			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
+				sServicesEntityName = "FlightSegmentItemSetCG";
+			} else if (sLob === Constants.LobType.ENG_SERVICES) {
+				sServicesEntityName = "FlightSegmentItemSetEG";
+			}
+
+			// entity names where we need to 
+			// set details ahead of 
+			// execute the create entity call 
+			var sDetailsEntityName = null;
+			var sDetailsModelPath = null;
+
+			if (sDirection === Constants.FlightSegmentType.ARRIVAL) {
+				sDetailsEntityName = "FlightSegmentHeaderInboundPax";
+				sDetailsModelPath = "/1/details";
+				sServicesModelPath = "/1/currentServices";
+			} else if (sDirection === Constants.FlightSegmentType.DEPARTURE) {
+				sDetailsEntityName = "FlightSegmentHeaderOutboundPax";
+				sDetailsModelPath = "/2/details";
+				sServicesModelPath = "/2/currentServices";
+			}
+
+			// omit the usage types from the model 
+			var aServices = _.map(oFlightSegment.getProperty(sServicesModelPath), function (oService) {
+				return _.omit(oService, ['usageTypes']);
+			});
+
+			// set the details and services to
+			// the entity payload dynamically 
+			if (sDetailsEntityName) {
+				oPayload[sDetailsEntityName] = oFlightSegment.getProperty(sDetailsModelPath);
+			}
+			oPayload[sServicesEntityName] = aServices;
+
+			oDataModel.create(sPath, oPayload, {
+				success: function (data, response) {
+
+				},
+				error: function (error) {
+
+				}
+			});
+
+			// var oInboundDetails = oFlightSegment.getProperty("/1/details");
+			// var oOutboundDetails = oFlightSegment.getProperty("/2/details");
+
+			// var oDetails = oFlightSegment.getProperty("/details");
+
+			// oDataModel.create(sPath,{
+			// 	Aufnr: this.oRouteArgs.depFlightNo,
+			// 	Preaufnr: this.oRouteArgs.arrFlightNo || '',
+			// 	FlightSegmentHeaderOutboundPax: oOutboundDetails,
+			// 	FlightSegmentHeaderInboundPax: oInboundDetails,
+			// 	FlightSegmentItemSetAC: aServices
+			// },{
+			// 	success: function(data,response){
+
+			// 	},
+			// 	error: function(error){
+
+			// 	}
+			// });
 
 		},
 
@@ -245,8 +347,31 @@ sap.ui.define([
 			// cancel edit mode
 			var self = this;
 			this.executeDequeueSegmentAction(function () {
-				self.getLobModel().setProperty("/editMode", false);
+				var bEntryChanged = self.getLobModel().getProperty("/entryHasChanged");
+				// if entry has changed and the user cancel 
+				// the edit mode then we need to reset the entry change flag and 
+				// reload the flight segment again from the server
+				if (bEntryChanged){
+					self.getLobModel().setProperty("/entryHasChanged", false);
+					self.refreshFlightSegment("/" + self.sObjectPath);
+				}
+				self._toggleEditMode(false);
 			});
+		},
+		
+		refreshFlightSegment: function(sObjectPath){
+			// should be overrided by child classes 
+		},
+
+		_toggleEditMode: function (bEditMode) {
+			if (bEditMode) {
+				this.getModel("appView").setProperty("/layout", "MidColumnFullScreen");
+				MessageToast.show("Edit mode enabled");
+			} else {
+				this.getLobModel().setProperty("/editMode", false);
+				this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
+				MessageToast.show("Edit mode disabled");
+			}
 		},
 
 		onServiceQuantityChanged: function (oEvent) {
@@ -263,9 +388,8 @@ sap.ui.define([
 			// get the binding path of this row 
 
 		},
-		
+
 		onTabSelected: function (oEvent) {
-			
 
 			var oLobModel = this.getLobModel();
 
@@ -318,7 +442,8 @@ sap.ui.define([
 			var sBindingPath = "/" + this.sObjectPath;
 
 			// Disable edit model when we move to another tab
-			this.getLobModel().setProperty("/editMode", false);
+			// this.getLobModel().setProperty("/editMode", false);
+			this._toggleEditMode(false);
 
 			// bind passanger details 
 			// this._bindPassangerDetails(sBindingPath, sSelectedTabKey);
@@ -327,7 +452,7 @@ sap.ui.define([
 
 			// Save the current selected tab
 			this._sCurrentSelectedTabKey = sSelectedTabKey;
-		},		
+		},
 
 		// ========================= End of Common Action Handlers =========================
 
@@ -409,19 +534,18 @@ sap.ui.define([
 			var oFlightSegmentModel = this.getServicesModel();
 
 			var aTabs = [];
-			var icon = sap.ui.core.IconPool.getIconURI("arrival","fa");
-			
+			var icon = sap.ui.core.IconPool.getIconURI("arrival", "fa");
 
 			if (oFlightSegment.Preaufnr) {
-				
-				var icon = sap.ui.core.IconPool.getIconURI("arrival","fa");			
-				
+
+				var icon = sap.ui.core.IconPool.getIconURI("arrival", "fa");
+
 				aTabs.push({
 					title: "Arrival",
 					key: Constants.FlightSegmentType.ARRIVAL,
-					icon: sap.ui.core.IconPool.getIconURI("arrival","fa")
+					icon: sap.ui.core.IconPool.getIconURI("arrival", "fa")
 				});
-				
+
 				this._oTabBar.setSelectedKey(Constants.FlightSegmentType.ARRIVAL);
 			}
 
@@ -429,15 +553,15 @@ sap.ui.define([
 				aTabs.push({
 					title: "Departure",
 					key: Constants.FlightSegmentType.DEPARTURE,
-					icon: sap.ui.core.IconPool.getIconURI("departure","fa")
+					icon: sap.ui.core.IconPool.getIconURI("departure", "fa")
 				});
-				
-				if (!oFlightSegment.Preaufnr){
+
+				if (!oFlightSegment.Preaufnr) {
 					this._oTabBar.setSelectedKey(Constants.FlightSegmentType.DEPARTURE);
 				}
 			}
-			
-			oFlightSegmentModel.setProperty("/tabs",aTabs);
+
+			oFlightSegmentModel.setProperty("/tabs", aTabs);
 
 		},
 
@@ -462,7 +586,6 @@ sap.ui.define([
 			oServicesModel.refresh();
 		},
 
-		
 		mapAndBindServices: function () {
 
 			// make sure that the services has been loaded
@@ -476,18 +599,20 @@ sap.ui.define([
 			var oFlightSegment = oServicesModel.getProperty("/flightSegment");
 
 			var aServices = this._getServicesByLob(oFlightSegment);
-			
+
 			// map usage type to services 
-			
-			for (var i = 0; i < aServices.length; i++){
+
+			for (var i = 0; i < aServices.length; i++) {
 				var oService = aServices[i];
-				if (!oService.UsageTypeString){
+				if (!oService.UsageTypeString) {
 					continue;
 				}
-				
+
 				// split the UsageTypeString by ; into usage types array
-				oService.usageTypes = _.map(_.split(oService.UsageTypeString,';'),function(usageType){
-					return { name: usageType };
+				oService.usageTypes = _.map(_.split(oService.UsageTypeString, ';'), function (usageType) {
+					return {
+						name: usageType
+					};
 				});
 			}
 

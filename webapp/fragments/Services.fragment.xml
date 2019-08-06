@@ -7,7 +7,7 @@
 			<m:OverflowToolbar>
 				<m:Title text="{i18n>CM_SERVICES}" level="H4"/>
 				<m:ToolbarSpacer/>
-				<m:Button text="{i18n>BTN_ADDITIONAL_SERVICES}" iconFirst="true" icon="sap-icon://add" press=".onMoreServicesButtonPressed"/>
+				<m:Button text="{i18n>BTN_ADDITIONAL_SERVICES}" iconFirst="true" icon="{= ${lobView>/editMode} === true ? 'sap-icon://add' : 'sap-icon://display'}" press=".onMoreServicesButtonPressed"/>
 			</m:OverflowToolbar>
 		</m:headerToolbar>
 		<m:columns>
@@ -36,8 +36,7 @@
 					<m:ComboBox editable="{lobView>/editMode}" items="{ path: 'flightServices>usageTypes', sorter: { path: 'text' } }">
 						<core:Item key="{flightServices>name}" text="{flightServices>name}"/>
 					</m:ComboBox>
-					<!--<m:Text text="{flightServices>CtrUsageType}"/>-->
-					<m:Button icon="sap-icon://delete" type="Transparent" visible="true" press="onRemoveService"/>
+					<m:Button enabled="{lobView>/editMode}" icon="sap-icon://delete" type="Transparent" visible="true" press="onRemoveService"/>
 				</m:cells>
 			</m:ColumnListItem>
 		</m:items>

@@ -17,21 +17,17 @@
 					<m:Input value="{flightServices>/details/FirstClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_BUSINESS_CLASS_TXT}"/>
-					<!--<m:Text text="{BusClassPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
 					<m:Input value="{flightServices>/details/BusClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_PERMIM_CLASS_TXT}"/>
-					<!--<m:Text text="{PremEcoPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
 					<m:Input value="{flightServices>/details/PremEcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
 					
 					<core:Title text=""/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_ECONOMY_CLASS_TXT}"/>
-					<!--<m:Text text="{EcoPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
 					<m:Input value="{flightServices>/details/EcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_TOTAL_PASSANGERS_TXT}"/>
-					<!--<m:Text text="{TotalPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
 					<m:Input value="{flightServices>/details/TotalPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
 		
 				</f:content>
