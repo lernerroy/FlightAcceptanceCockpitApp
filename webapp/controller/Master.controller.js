@@ -77,37 +77,31 @@ sap.ui.define([
 			this.getRouter().attachBypassed(this.onBypassed, this);
 		},
 
-		SegmentTitleFormatter: function (sFlightId, sDirection) {
-			
-			debugger;
-			
-			// if (sFlightId === null || sFlightId === undefined) {
-			// 	return null;
-			// }
+		FlightStatusStateFormatter: function (sStatus) {
+			switch (sStatus) {
+			case Constants.FlightSegmentStatus.PENDING:
+				return "None";
+			case Constants.FlightSegmentStatus.READY:
+				return "Indication03";
+			case Constants.FlightSegmentStatus.CONFIRMED:
+				return "Success";
+			}
 
-			// // return outbound flight details 
-			// var sPath = this.getView().getBindingContext().getPath();
-			// // get the segment object 
-			// var oFlightSegment = this.getModel().getProperty(sPath);
-
-			// if (sDirection === Constants.FlightSegmentType.ARRIVAL) {
-			// 	if (!sFlightId) {
-			// 		return "No Inbound Flight";
-			// 	}
-
-			// 	// {Precarriercode}{Preflightno} {Predepairp}-{Prearrairp}
-			// 	return oFlightSegment.Precarriercode + oFlightSegment.Preflightno + " " + oFlightSegment.Predepairp + "-" + oFlightSegment.Prearrairp;
-
-			// } else
-			// if (sDirection === Constants.FlightSegmentType.DEPARTURE) {
-			// 	if (!sFlightId) {
-			// 		return "No Outbound Flight"
-			// 	}
-
-			// 	return oFlightSegment.Precarriercode + oFlightSegment.Flightno + " " + oFlightSegment.Prearrairp + "-" + oFlightSegment.Arrairp;
-
-			// }
+			return "None";
 		},
+		
+		FlightStatusTextFormatter: function (sStatus) {
+			switch (sStatus) {
+			case Constants.FlightSegmentStatus.PENDING:
+				return "Not Ready";
+			case Constants.FlightSegmentStatus.READY:
+				return "Ready";
+			case Constants.FlightSegmentStatus.CONFIRMED:
+				return "Confirmed";
+			}
+
+			return "None";
+		},		
 
 		/* =========================================================== */
 		/* event handlers                                              */

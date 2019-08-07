@@ -14,53 +14,24 @@
 					<core:Title text=""/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_FIRST_CLASS_TXT}"/>
-					<m:Input value="{flightServices>/details/FirstClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
+					<m:Input value="{flightServices>/details/FirstClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}" change=".onPassangerDetailsValueChanged"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_BUSINESS_CLASS_TXT}"/>
-					<m:Input value="{flightServices>/details/BusClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
+					<m:Input value="{flightServices>/details/BusClassPax}" editable="{= ${lobView>/editMode} === true ? true : false}" change=".onPassangerDetailsValueChanged"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_PERMIM_CLASS_TXT}"/>
-					<m:Input value="{flightServices>/details/PremEcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
+					<m:Input value="{flightServices>/details/PremEcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}" change=".onPassangerDetailsValueChanged"/>
 					
 					<core:Title text=""/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_ECONOMY_CLASS_TXT}"/>
-					<m:Input value="{flightServices>/details/EcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
+					<m:Input value="{flightServices>/details/EcoPax}" editable="{= ${lobView>/editMode} === true ? true : false}" change=".onPassangerDetailsValueChanged"/>
 					
 					<m:Label design="Bold" text="{i18n>LBL_TOTAL_PASSANGERS_TXT}"/>
-					<m:Input value="{flightServices>/details/TotalPax}" editable="{= ${lobView>/editMode} === true ? true : false}"/>
+					<m:Input value="{flightServices>/details/TotalPax}" editable="{= ${lobView>/editMode} === true ? true : false}" change=".onPassangerDetailsValueChanged"/>
 		
 				</f:content>
 			</f:SimpleForm>
-			<!--<layout:Grid id="gridPassDetails" class="sapUiTinyMargin" vSpacing="0.5" defaultSpan="L6 M6 S12" defaultIndent="L0 M0 S0" width="100%" hSpacing="0.5">-->
-			<!--	<layout:content width="100%">-->
-			<!--		<m:HBox class="sapUiMediumMarginBeginEnd" alignItems="Center">-->
-			<!--			<m:Label design="Bold" text="{i18n>LBL_FIRST_CLASS_TXT}" class="sapUiTinyMarginEnd"/>-->
-			<!--			<m:Text text="{FirstClassPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
-			<!--			<m:Input value="{FirstClassPax}" visible="{= ${lobView>/editMode} === true ? true : false}"/>-->
-			<!--		</m:HBox>-->
-			<!--		<m:HBox class="sapUiMediumMarginBeginEnd" alignItems="Center">-->
-			<!--			<m:Label design="Bold" text="{i18n>LBL_BUSINESS_CLASS_TXT}" class="sapUiTinyMarginEnd"/>-->
-			<!--			<m:Text text="{BusClassPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
-			<!--			<m:Input value="{BusClassPax}"  visible="{= ${lobView>/editMode} === true ? true : false}"/>-->
-			<!--		</m:HBox>-->
-			<!--		<m:HBox class="sapUiMediumMarginBeginEnd" alignItems="Center">-->
-			<!--			<m:Label design="Bold" text="{i18n>LBL_PERMIM_CLASS_TXT}" class="sapUiTinyMarginEnd"/>-->
-			<!--			<m:Text text="{PremEcoPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
-			<!--			<m:Input value="{PremEcoPax}" visible="{= ${lobView>/editMode} === true ? true : false}"/>-->
-			<!--		</m:HBox>-->
-			<!--		<m:HBox class="sapUiMediumMarginBeginEnd" alignItems="Center">-->
-			<!--			<m:Label design="Bold" text="{i18n>LBL_ECONOMY_CLASS_TXT}" class="sapUiTinyMarginEnd"/>-->
-			<!--			<m:Text text="{EcoPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
-			<!--			<m:Input value="{EcoPax}" visible="{= ${lobView>/editMode} === true ? true : false}"/>-->
-			<!--		</m:HBox>-->
-			<!--		<m:HBox class="sapUiMediumMarginBeginEnd" alignItems="Center">-->
-			<!--			<m:Label design="Bold" text="{i18n>LBL_TOTAL_PASSANGERS_TXT}" class="sapUiTinyMarginEnd"/>-->
-			<!--			<m:Text text="{TotalPax}" visible="{= ${lobView>/editMode} === true ? false : true}"/>-->
-			<!--			<m:Input value="{TotalPax}" visible="{= ${lobView>/editMode} === true ? true : false}"/>-->
-			<!--		</m:HBox>-->
-			<!--	</layout:content>-->
-			<!--</layout:Grid>-->
 		</m:content>
 	</m:Panel>
 </core:FragmentDefinition>

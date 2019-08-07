@@ -54,7 +54,15 @@ sap.ui.define([
 			var isInEditMode = oLobModel.getProperty("/editMode");
 			
 			oLobModel.setProperty("/editMode", !isInEditMode);
-		}
+		},
+		
+		onCargoDetailsValueChanged: function(oEvent){
+			// get the parent row where this input field is located
+			// var oParent = oEvent.getSource().getParent();
+
+			// Modify the Lob model state that the entry has changed			
+			this.getLobModel().setProperty("/entryHasChanged", true);			
+		}		
 	});
 
 });

@@ -3,6 +3,11 @@ sap.ui.define({
 		ARRIVAL: "ARR",
 		DEPARTURE: "DEP"
 	},
+	FlightSegmentStatus: {
+		PENDING: "PEND",
+		CONFIRMED: "CONF",
+		READY: "REDY"
+	},
 	LobType: {
 		AIRPORT_CHARGES: "AirportCharges",
 		CARGO_DETAILS: "CargoDetails",

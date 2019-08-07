@@ -27,11 +27,11 @@ sap.ui.define([
 
 			this.setModel(oLobView, "lobView");
 
-			window.onhashchange = function(){
-				if (window.innerDocClick){
-					
+			window.onhashchange = function () {
+				if (window.innerDocClick) {
+
 				} else {
-					debugger;	
+					debugger;
 				}
 			};
 		},
@@ -129,26 +129,7 @@ sap.ui.define([
 			// Present him a dialog that will ask him if he like 
 			// to: 1. Save the changes and continue, 2. Revert changes and continue
 			if (oLobModel.getData().entryHasChanged === true) {
-
-				MessageBox.alert("Do you want to save the document first?", {
-					title: "Leave Flight",
-					actions: [
-						MessageBox.Action.CANCEL,
-						MessageBox.Action.NO,
-						MessageBox.Action.YES
-					],
-					onClose: function (sAction) {
-						if (sAction === MessageBox.Action.YES) {
-							// TODO: Save entry and dequeue flight 
-						} else if (sAction === MessageBox.Action.NO) {
-							self.executeDequeueSegmentAction(function () {
-								self.getLobModel().setProperty("/entryHasChanged", false);
-								self.getLobModel().setProperty("/editMode", false);
-								self.onNavBack();
-							});
-						}
-					}
-				});
+				this._presentSaveFlightMessageBox();
 			} else if (oLobModel.getData().entryIsLocked === true) {
 
 				this.executeDequeueSegmentAction(function () {
@@ -160,6 +141,27 @@ sap.ui.define([
 				self.getLobModel().setProperty("/editMode", false);
 				self.onNavBack();
 			}
+		},
+
+		_presentSaveFlightMessageBox: function (bRefreshRecord) {
+			
+			var self = this;
+			
+			MessageBox.alert("Do you want to save the document first?", {
+				title: "Leave Flight",
+				actions: [
+					MessageBox.Action.CANCEL,
+					MessageBox.Action.NO,
+					MessageBox.Action.YES
+				],
+				onClose: function (sAction) {
+					if (sAction === MessageBox.Action.YES) {
+						// TODO: Save entry and dequeue flight 
+					} else if (sAction === MessageBox.Action.NO) {
+						self.onCancelEdit();
+					}
+				}
+			});
 		},
 
 		onEditPressed: function (oEvent) {
@@ -244,27 +246,6 @@ sap.ui.define([
 
 				}
 			});
-
-			// var oInboundDetails = oFlightSegment.getProperty("/1/details");
-			// var oOutboundDetails = oFlightSegment.getProperty("/2/details");
-
-			// var oDetails = oFlightSegment.getProperty("/details");
-
-			// oDataModel.create(sPath,{
-			// 	Aufnr: this.oRouteArgs.depFlightNo,
-			// 	Preaufnr: this.oRouteArgs.arrFlightNo || '',
-			// 	FlightSegmentHeaderOutboundPax: oOutboundDetails,
-			// 	FlightSegmentHeaderInboundPax: oInboundDetails,
-			// 	FlightSegmentItemSetAC: aServices
-			// },{
-			// 	success: function(data,response){
-
-			// 	},
-			// 	error: function(error){
-
-			// 	}
-			// });
-
 		},
 
 		executeEnququeSegmentAction: function (fnSuccess, bShowBusyDialog) {
@@ -357,26 +338,26 @@ sap.ui.define([
 				// if entry has changed and the user cancel 
 				// the edit mode then we need to reset the entry change flag and 
 				// reload the flight segment again from the server
-				if (bEntryChanged){
+				if (bEntryChanged) {
 					self.getLobModel().setProperty("/entryHasChanged", false);
 					self.refreshFlightSegment("/" + self.sObjectPath);
 				}
 				self._toggleEditMode(false);
 			});
 		},
-		
-		refreshFlightSegment: function(sObjectPath){
+
+		refreshFlightSegment: function (sObjectPath) {
 			// should be overrided by child classes 
 		},
 
 		_toggleEditMode: function (bEditMode) {
-			
+
 			var bIsInEditMode = this.getLobModel().getProperty("/editMode");
-			
-			if (bEditMode === bIsInEditMode){
+
+			if (bEditMode === bIsInEditMode) {
 				return;
 			}
-			
+
 			if (bEditMode) {
 				this.getLobModel().setProperty("/editMode", true);
 				this.getModel("appView").setProperty("/layout", "MidColumnFullScreen");
@@ -396,11 +377,6 @@ sap.ui.define([
 			// Modify the Lob model state that the entry has changed			
 			this.getLobModel().setProperty("/entryHasChanged", true);
 
-			// update the shared state model that the entry has been changed
-			this.getSharedStateModel().setProperty("/entryHasChanged", true);
-
-			// get the binding path of this row 
-
 		},
 
 		onTabSelected: function (oEvent) {
@@ -416,27 +392,7 @@ sap.ui.define([
 			// Present him a dialog that will ask him if he like 
 			// to: 1. Save the changes and continue, 2. Revert changes and continue
 			if (oLobModel.getData().entryHasChanged === true) {
-
-				MessageBox.alert("Do you want to save the document first?", {
-					title: "Leave Flight",
-					actions: [
-						MessageBox.Action.CANCEL,
-						MessageBox.Action.NO,
-						MessageBox.Action.YES
-					],
-					onClose: function (sAction) {
-						if (sAction === MessageBox.Action.YES) {
-							// TODO: Save entry and dequeue flight 
-						} else if (sAction === MessageBox.Action.NO) {
-							self.executeDequeueSegmentAction(function () {
-								self.getLobModel().setProperty("/entryHasChanged", false);
-								self._oTabBar.setSelectedKey(sRequestedSelectedTabKey);
-								self._handleTabSelection(sRequestedSelectedTabKey);
-							});
-						}
-					}
-				});
-
+				this._presentSaveFlightMessageBox();
 				// cancel tab selection
 				this._oTabBar.setSelectedKey(this._sCurrentSelectedTabKey);
 
