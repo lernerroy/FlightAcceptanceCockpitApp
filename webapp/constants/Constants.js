@@ -12,5 +12,11 @@ sap.ui.define({
 		AIRPORT_CHARGES: "AirportCharges",
 		CARGO_DETAILS: "CargoDetails",
 		ENG_SERVICES: "EngServices"
+	},
+	LegstateType: {
+		ARRIVED: "ARR",
+		DEPARTED: "DEP",
+		CANCELED: "CNL",
+		RETURNED: "RTR"
 	}
 },true);
