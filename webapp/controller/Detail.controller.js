@@ -51,16 +51,16 @@ sap.ui.define([
 				if (!sFlightId) {
 					return "No Inbound Flight";
 				}
-				
+
 				// {Precarriercode}{Preflightno} {Predepairp}-{Prearrairp}
 				return oFlightSegment.Precarriercode + oFlightSegment.Preflightno + " " + oFlightSegment.Predepairp + "-" + oFlightSegment.Prearrairp;
-				
+
 			} else
 			if (sDirection === Constants.FlightSegmentType.DEPARTURE) {
 				if (!sFlightId) {
 					return "No Outbound Flight"
 				}
-				
+
 				return oFlightSegment.Precarriercode + oFlightSegment.Flightno + " " + oFlightSegment.Prearrairp + "-" + oFlightSegment.Arrairp;
 
 			}
@@ -134,6 +134,7 @@ sap.ui.define([
 					Preaufnr: sObjectId,
 					Aufnr: sFlightNo
 				});
+
 				this._bindView("/" + sObjectPath);
 			}.bind(this));
 		},
@@ -164,6 +165,45 @@ sap.ui.define([
 					}
 				}
 			});
+		},
+
+		beforeOpenIntStatusPopover: function (oEvent) {
+			var oOpenBy = oEvent.getParameter("openBy");
+			var sDirection = oOpenBy.data("direction");
+			var sBindingPath = oOpenBy.getBindingContext().getPath();
+			
+			this._mapInterfaceStatuses(sBindingPath, sDirection);
+		},
+		
+		afterCloseIntStatusPopover: function(oEvent){
+			this._oInteracesPopOver.destroy();
+			this._oInteracesPopOver = null;
+		},		
+
+		_mapInterfaceStatuses: function (sObjectPath, sDirection) {
+
+			// extract the current flight segment from model 			
+			var oFlightSegment = this.getModel().getProperty(sObjectPath);
+			
+			// Build the interface status model based on the 
+			// data we have in the flight segment for the specific direction 
+			
+			
+
+			var oInterfaceStatusModel = new JSONModel([{
+				name: "Passanger",
+				status: sDirection === Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PrePssLight : oFlightSegment.PssLight
+			}, {
+				name: "Cargo",
+				status: Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCargoLight : oFlightSegment.CargoLight
+			}, {
+				name: "Overfly",
+				status: Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCfpLight : oFlightSegment.CfpLight
+			}]);
+			
+			
+			this._oInteracesPopOver.setModel(oInterfaceStatusModel,"interfaceStatus");
+			
 		},
 
 		_showLob: function (oLob, oItem) {
@@ -248,6 +288,29 @@ sap.ui.define([
 
 		onNavBack: function () {
 			this.getRouter().navTo("master", {}, true);
+		},
+
+		onOverallStatusPressed: function (oEvent) {
+			
+			if (this._oInteracesPopOver && this._oInteracesPopOver.isOpen()){
+				this._oInteracesPopOver.close();
+				return;
+			}
+			
+			this._createOverallStatusesPopover();
+			// delay because addDependent will do a async rerendering and the actionSheet will immediately close without it.
+			var oSource = oEvent.getSource();
+			jQuery.sap.delayedCall(0, this, function () {
+				this._oInteracesPopOver.openBy(oSource);
+			});
+		},
+
+		_createOverallStatusesPopover: function () {
+			if (!this._oInteracesPopOver) {
+				this._oInteracesPopOver = sap.ui.xmlfragment("com.legstate.fts.app.FlightAcceptanceCockpit.fragments.InterfacesStatus", this);
+			}
+
+			this.getView().addDependent(this._oInteracesPopOver);
 		},
 
 		/**

@@ -75,32 +75,6 @@ sap.ui.define([
 
 			this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
 			this.getRouter().attachBypassed(this.onBypassed, this);
-		},
-
-		FlightStatusStateFormatter: function (sStatus) {
-			switch (sStatus) {
-			case Constants.FlightSegmentStatus.PENDING:
-				return "None";
-			case Constants.FlightSegmentStatus.READY:
-				return "Indication03";
-			case Constants.FlightSegmentStatus.CONFIRMED:
-				return "Success";
-			}
-
-			return "None";
-		},
-		
-		FlightStatusTextFormatter: function (sStatus) {
-			switch (sStatus) {
-			case Constants.FlightSegmentStatus.PENDING:
-				return "Not Ready";
-			case Constants.FlightSegmentStatus.READY:
-				return "Ready";
-			case Constants.FlightSegmentStatus.CONFIRMED:
-				return "Confirmed";
-			}
-
-			return "None";
 		},		
 
 		/* =========================================================== */

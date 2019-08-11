@@ -26,14 +26,6 @@ sap.ui.define([
 			}, true);
 
 			this.setModel(oLobView, "lobView");
-
-			window.onhashchange = function () {
-				if (window.innerDocClick) {
-
-				} else {
-					debugger;
-				}
-			};
 		},
 
 		// ========================= End of Common Setup/Init =========================
@@ -129,13 +121,13 @@ sap.ui.define([
 			// Present him a dialog that will ask him if he like 
 			// to: 1. Save the changes and continue, 2. Revert changes and continue
 			if (oLobModel.getData().entryHasChanged === true) {
-				this._presentSaveFlightMessageBox();
+				this._presentSaveFlightMessageBox(false,true);
 			} else if (oLobModel.getData().entryIsLocked === true) {
 
 				this.executeDequeueSegmentAction(function () {
 					self.getLobModel().setProperty("/editMode", false);
 					self.onNavBack();
-				})
+				});
 
 			} else {
 				self.getLobModel().setProperty("/editMode", false);
@@ -143,7 +135,7 @@ sap.ui.define([
 			}
 		},
 
-		_presentSaveFlightMessageBox: function (bRefreshRecord) {
+		_presentSaveFlightMessageBox: function (bRefreshRecord, bClose) {
 			
 			var self = this;
 			
@@ -158,7 +150,7 @@ sap.ui.define([
 					if (sAction === MessageBox.Action.YES) {
 						// TODO: Save entry and dequeue flight 
 					} else if (sAction === MessageBox.Action.NO) {
-						self.onCancelEdit();
+						self._cancelEdit(bRefreshRecord, bClose);
 					}
 				}
 			});
@@ -332,18 +324,33 @@ sap.ui.define([
 
 		onCancelEdit: function (oEvent) {
 			// cancel edit mode
+			this._cancelEdit(true);
+		},
+		
+		_cancelEdit: function(bRefresh, bClose){
+			
 			var self = this;
+			
 			this.executeDequeueSegmentAction(function () {
+				
+				self._toggleEditMode(false);
+				
 				var bEntryChanged = self.getLobModel().getProperty("/entryHasChanged");
+				
 				// if entry has changed and the user cancel 
 				// the edit mode then we need to reset the entry change flag and 
 				// reload the flight segment again from the server
 				if (bEntryChanged) {
 					self.getLobModel().setProperty("/entryHasChanged", false);
-					self.refreshFlightSegment("/" + self.sObjectPath);
+					if (bRefresh){
+						self.refreshFlightSegment("/" + self.sObjectPath);
+					}
 				}
-				self._toggleEditMode(false);
-			});
+				
+				if (bClose){
+					self.onNavBack();
+				}
+			});			
 		},
 
 		refreshFlightSegment: function (sObjectPath) {
@@ -392,7 +399,7 @@ sap.ui.define([
 			// Present him a dialog that will ask him if he like 
 			// to: 1. Save the changes and continue, 2. Revert changes and continue
 			if (oLobModel.getData().entryHasChanged === true) {
-				this._presentSaveFlightMessageBox();
+				this._presentSaveFlightMessageBox(true);
 				// cancel tab selection
 				this._oTabBar.setSelectedKey(this._sCurrentSelectedTabKey);
 

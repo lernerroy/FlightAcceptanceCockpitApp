@@ -18,5 +18,9 @@ sap.ui.define({
 		DEPARTED: "DEP",
 		CANCELED: "CNL",
 		RETURNED: "RTR"
+	},
+	InterfaceStatus: {
+		PENDING: "PEND",
+		ARRIVED: "CONF"
 	}
 },true);

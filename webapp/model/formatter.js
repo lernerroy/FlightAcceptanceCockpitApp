@@ -18,20 +18,20 @@ sap.ui.define([
 
 			return parseFloat(sValue).toFixed(2);
 		},
-		
+
 		overallStatusStateFormatter: function (sStatus) {
 			switch (sStatus) {
 			case Constants.FlightSegmentStatus.PENDING:
-				return "Information";
+				return "None";
 			case Constants.FlightSegmentStatus.READY:
 				return "Indication03";
 			case Constants.FlightSegmentStatus.CONFIRMED:
 				return "Success";
 			}
-			
+
 			return "Indication01";
 		},
-		
+
 		overallStatusTextFormatter: function (sStatus) {
 			switch (sStatus) {
 			case Constants.FlightSegmentStatus.PENDING:
@@ -43,12 +43,12 @@ sap.ui.define([
 			}
 
 			return "None";
-		},		
+		},
 
 		legstateTypeText: function (sLegstate) {
-			
+
 			// TODO: translate
-			
+
 			switch (sLegstate) {
 			case Constants.LegstateType.ARRIVED:
 				return "Arrived";
@@ -57,12 +57,12 @@ sap.ui.define([
 			case Constants.LegstateType.CANCELED:
 				return "Canceled";
 			case Constants.LegstateType.RETURNED:
-				return "Returned";				
+				return "Returned";
 			}
-			
+
 			return "Not Arrived";
 		},
-		
+
 		legstateTypeState: function (sLegstate) {
 			switch (sLegstate) {
 			case Constants.LegstateType.ARRIVED:
@@ -72,10 +72,32 @@ sap.ui.define([
 			case Constants.LegstateType.CANCELED:
 				return "Indication03";
 			case Constants.LegstateType.RETURNED:
-				return "Indication03";				
+				return "Indication03";
 			}
-			
+
 			return "Indication01";
+		},
+
+		interfaceStatusState: function (sStatus) {
+			switch (sStatus) {
+			case Constants.InterfaceStatus.PENDING:
+				return "Indication03";
+			case Constants.InterfaceStatus.ARRIVED:
+				return "Success";
+			}
+
+			return "None";
+		},
+
+		interfaceStatusText: function (sStatus) {
+			switch (sStatus) {
+			case Constants.InterfaceStatus.PENDING:
+				return "Pending";
+			case Constants.InterfaceStatus.ARRIVED:
+				return "Arrived";
+			}
+
+			return "Unknown";
 		}
 	};
 });

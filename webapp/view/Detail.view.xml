@@ -2,8 +2,6 @@
 	xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:grid="sap.ui.layout.cssgrid"
 	controllerName="com.legstate.fts.app.FlightAcceptanceCockpit.controller.Detail">
 	<semantic:SemanticPage id="detailPage" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}">
-		<!--<semantic:titleHeading></semantic:titleHeading>-->
-		<!--<semantic:headerContent></semantic:headerContent>-->
 		<semantic:content>
 			<uxap:ObjectPageLayout id="objectPageLayout" enableLazyLoading="false" subSectionLayout="TitleOnLeft" showTitleInHeaderContent="false"
 				showHeaderContent="true">
@@ -16,14 +14,19 @@
 				</uxap:headerTitle>
 				<uxap:headerContent>
 					<VBox width="100%">
-						<l:Grid width="auto" vSpacing="0" defaultSpan="XL6 L6 M6 S12" class="sapUiSmallMarginTop">
+						<l:Grid visible="{= !${detailView>/busy}}" width="auto" vSpacing="0" defaultSpan="XL6 L6 M6 S12" class="sapUiSmallMarginTop">
 							<!-- Arrival flight details -->
 							<VBox backgroundDesign="Transparent" class="sapUiSmallMarginBottom">
 								<HBox class="sapUiTinyMarginBottom">
 									<core:Icon src="sap-icon://fa/arrival" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Preaufnr'}, {value: 'ARR'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
-									<ObjectStatus text="{path: 'PreOverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
-										state="{path: 'PreOverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin"/>
+									<ObjectStatus active="true" press=".onOverallStatusPressed"
+										text="{path: 'PreOverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
+										state="{path: 'PreOverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
+										<customData>
+											<core:CustomData key="direction" value="ARR"/>
+										</customData>
+									</ObjectStatus>
 								</HBox>
 								<HBox visible="{= ${Preaufnr} !== ''}">
 									<Label text="Order Number" design="Bold" class="sapUiTinyMarginEnd"/>
@@ -56,8 +59,13 @@
 								<HBox class="sapUiTinyMarginBottom">
 									<core:Icon src="sap-icon://fa/departure" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Aufnr'}, {value: 'DEP'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
-									<ObjectStatus text="{path: 'OverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
-										state="{path: 'OverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin"/>
+									<ObjectStatus active="true" press=".onOverallStatusPressed"
+										text="{path: 'OverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
+										state="{path: 'OverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
+										<customData>
+											<core:CustomData key="direction" value="DEP" />
+										</customData>
+									</ObjectStatus>
 								</HBox>
 								<HBox visible="{= ${Aufnr} !== ''}">
 									<Label text="Order Number" design="Bold" class="sapUiTinyMarginEnd"/>
@@ -93,8 +101,8 @@
 						<uxap:subSections>
 							<uxap:ObjectPageSubSection>
 								<uxap:blocks>
-									<f:GridList width="100%" items="{ path: 'lobs>/' }" itemPress=".onLobSelected">
-										<CustomListItem type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
+									<f:GridList visible="{= !${detailView>/busy}}" width="100%" items="{ path: 'lobs>/' }" itemPress=".onLobSelected">
+										<CustomListItem blocked="{= ${NxtOverallLight} === 'PEND' ? true : false }" type="{= ${NxtOverallLight} === 'PEND' ? Inactive : Navigation }" class="sapUiTinyMargin lob-card" highlight="None">
 											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
 												<Image height="5rem" width="5rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
 												<Title text="{lobs>title}" level="H4" titleStyle="H4" class="sapUiSmallMarginEnd"/>

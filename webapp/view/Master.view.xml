@@ -60,8 +60,8 @@
 									</VBox>
 								</HBox>
 							</VBox>
-							<ObjectStatus text="{path: 'OverallLight', formatter: '.FlightStatusTextFormatter'}"
-								state="{path: 'OverallLight', formatter: '.FlightStatusStateFormatter'}" inverted="true"/>
+							<ObjectStatus text="{path: 'NxtOverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
+								state="{path: 'NxtOverallLight', formatter:  '.formatter.overallStatusStateFormatter'}" inverted="true"/>
 						</HBox>
 					</CustomListItem>
 				</items>
