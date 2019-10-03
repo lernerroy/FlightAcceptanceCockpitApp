@@ -165,7 +165,7 @@
 						"object",
 						"overflightServices"
 					]
-				}				
+				}
 			],
 			"targets": {
 				"master": {
@@ -215,7 +215,7 @@
 					"viewId": "overflightServices",
 					"viewLevel": 3,
 					"controlAggregation": "midColumnPages"
-				},				
+				},
 				"detailObjectNotFound": {
 					"viewName": "DetailObjectNotFound",
 					"viewId": "detailObjectNotFound",

@@ -14,36 +14,39 @@
 				backgroundDesign="Transparent" expandable="false" items="{flightServices>/tabs}">
 				<items>
 					<IconTabFilter key="{flightServices>key}" text="{flightServices>title}" icon="{flightServices>icon}">
-						<Panel id="overflyPanel" expandable="true" expanded="true">
-							<headerToolbar>
-								<OverflowToolbar style="Standard">
-									<Title text="Overflight"/>
-									<content>
-										<ToolbarSpacer/>
-									</content>
-								</OverflowToolbar>
-							</headerToolbar>
-							<content>
-								<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">
-									<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
-								</ScrollContainer>
-							</content>
-						</Panel>
-						<Panel id="navigationPanel" expandable="true" expanded="true">
-							<headerToolbar>
-								<OverflowToolbar style="Standard">
-									<Title text="Navigation"/>
-									<content>
-										<ToolbarSpacer/>
-									</content>
-								</OverflowToolbar>
-							</headerToolbar>
-							<content>
-								<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">
-									<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
-								</ScrollContainer>
-							</content>
-						</Panel>						
+						<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">
+							<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>
+						</ScrollContainer>
+						<!--<Panel id="overflyPanel" expandable="true" expanded="true">-->
+						<!--	<headerToolbar>-->
+						<!--		<OverflowToolbar style="Standard">-->
+						<!--			<Title text="Overflight"/>-->
+						<!--			<content>-->
+						<!--				<ToolbarSpacer/>-->
+						<!--			</content>-->
+						<!--		</OverflowToolbar>-->
+						<!--	</headerToolbar>-->
+						<!--	<content>-->
+						<!--		<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">-->
+						<!--			<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
+						<!--		</ScrollContainer>-->
+						<!--	</content>-->
+						<!--</Panel>-->
+						<!--<Panel id="navigationPanel" expandable="true" expanded="true">-->
+						<!--	<headerToolbar>-->
+						<!--		<OverflowToolbar style="Standard">-->
+						<!--			<Title text="Navigation"/>-->
+						<!--			<content>-->
+						<!--				<ToolbarSpacer/>-->
+						<!--			</content>-->
+						<!--		</OverflowToolbar>-->
+						<!--	</headerToolbar>-->
+						<!--	<content>-->
+						<!--		<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">-->
+						<!--			<core:Fragment fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
+						<!--		</ScrollContainer>-->
+						<!--	</content>-->
+						<!--</Panel>						-->
 					</IconTabFilter>
 				</items>
 			</IconTabBar>
