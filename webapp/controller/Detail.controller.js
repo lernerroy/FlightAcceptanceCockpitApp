@@ -171,24 +171,22 @@ sap.ui.define([
 			var oOpenBy = oEvent.getParameter("openBy");
 			var sDirection = oOpenBy.data("direction");
 			var sBindingPath = oOpenBy.getBindingContext().getPath();
-			
+
 			this._mapInterfaceStatuses(sBindingPath, sDirection);
 		},
-		
-		afterCloseIntStatusPopover: function(oEvent){
+
+		afterCloseIntStatusPopover: function (oEvent) {
 			this._oInteracesPopOver.destroy();
 			this._oInteracesPopOver = null;
-		},		
+		},
 
 		_mapInterfaceStatuses: function (sObjectPath, sDirection) {
 
 			// extract the current flight segment from model 			
 			var oFlightSegment = this.getModel().getProperty(sObjectPath);
-			
+
 			// Build the interface status model based on the 
 			// data we have in the flight segment for the specific direction 
-			
-			
 
 			var oInterfaceStatusModel = new JSONModel([{
 				name: "Passanger",
@@ -200,10 +198,9 @@ sap.ui.define([
 				name: "Overfly",
 				status: Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCfpLight : oFlightSegment.CfpLight
 			}]);
-			
-			
-			this._oInteracesPopOver.setModel(oInterfaceStatusModel,"interfaceStatus");
-			
+
+			this._oInteracesPopOver.setModel(oInterfaceStatusModel, "interfaceStatus");
+
 		},
 
 		_showLob: function (oLob, oItem) {
@@ -229,6 +226,11 @@ sap.ui.define([
 				});
 			} else if (sLobType === "ES") {
 				oRouter.navTo("EngServices", {
+					arrFlightNo: oItem.getProperty("Preaufnr"),
+					depFlightNo: oItem.getProperty("Aufnr")
+				});
+			} else if (sLobType === "ON") {
+				oRouter.navTo("OverflightServices", {
 					arrFlightNo: oItem.getProperty("Preaufnr"),
 					depFlightNo: oItem.getProperty("Aufnr")
 				});
@@ -291,12 +293,12 @@ sap.ui.define([
 		},
 
 		onOverallStatusPressed: function (oEvent) {
-			
-			if (this._oInteracesPopOver && this._oInteracesPopOver.isOpen()){
+
+			if (this._oInteracesPopOver && this._oInteracesPopOver.isOpen()) {
 				this._oInteracesPopOver.close();
 				return;
 			}
-			
+
 			this._createOverallStatusesPopover();
 			// delay because addDependent will do a async rerendering and the actionSheet will immediately close without it.
 			var oSource = oEvent.getSource();

@@ -173,30 +173,30 @@ sap.ui.define([
 		 * @public
 		 */
 		onConfirmViewSettingsDialog: function (oEvent) {
-			var aFilterItems = oEvent.getParameters().filterItems,
-				aFilters = [],
-				aCaptions = [];
+			// var aFilterItems = oEvent.getParameters().filterItems,
+			// 	aFilters = [],
+			// 	aCaptions = [];
+				
+		// // update filter state:
+			// // combine the filter array and the filter string
+			// aFilterItems.forEach(function (oItem) {
+			// 	switch (oItem.getKey()) {
+			// 	case "Filter1":
+			// 		aFilters.push(new Filter("Direction", FilterOperator.LE, 100));
+			// 		break;
+			// 	case "Filter2":
+			// 		aFilters.push(new Filter("Direction", FilterOperator.GT, 100));
+			// 		break;
+			// 	default:
+			// 		break;
+			// 	}
+			// 	aCaptions.push(oItem.getText());
+			// });
 
-			// update filter state:
-			// combine the filter array and the filter string
-			aFilterItems.forEach(function (oItem) {
-				switch (oItem.getKey()) {
-				case "Filter1":
-					aFilters.push(new Filter("Direction", FilterOperator.LE, 100));
-					break;
-				case "Filter2":
-					aFilters.push(new Filter("Direction", FilterOperator.GT, 100));
-					break;
-				default:
-					break;
-				}
-				aCaptions.push(oItem.getText());
-			});
-
-			this._oListFilterState.aFilter = aFilters;
-			this._updateFilterBar(aCaptions.join(", "));
-			this._applyFilterSearch();
-			this._applySortGroup(oEvent);
+			// this._oListFilterState.aFilter = aFilters;
+			// this._updateFilterBar(aCaptions.join(", "));
+			// this._applyFilterSearch();
+			// this._applySortGroup(oEvent);
 		},
 
 		/**

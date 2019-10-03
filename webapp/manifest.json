@@ -156,7 +156,16 @@
 						"object",
 						"engServices"
 					]
-				}
+				},
+				{
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:/OverflightServices",
+					"name": "OverflightServices",
+					"target": [
+						"master",
+						"object",
+						"overflightServices"
+					]
+				}				
 			],
 			"targets": {
 				"master": {
@@ -200,6 +209,13 @@
 					"viewLevel": 3,
 					"controlAggregation": "midColumnPages"
 				},
+				"overflightServices": {
+					"viewType": "XML",
+					"viewName": "OverflightServices",
+					"viewId": "overflightServices",
+					"viewLevel": 3,
+					"controlAggregation": "midColumnPages"
+				},				
 				"detailObjectNotFound": {
 					"viewName": "DetailObjectNotFound",
 					"viewId": "detailObjectNotFound",

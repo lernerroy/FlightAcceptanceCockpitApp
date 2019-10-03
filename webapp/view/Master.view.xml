@@ -24,9 +24,9 @@
 							</layoutData>
 						</SearchField>
 						<ToolbarSpacer/>
-						<Button id="sortButton" press=".onOpenViewSettings" icon="sap-icon://sort" type="Transparent"/>
+						<!--<Button id="sortButton" press=".onOpenViewSettings" icon="sap-icon://sort" type="Transparent"/>-->
 						<Button id="filterButton" press=".onOpenViewSettings" icon="sap-icon://filter" type="Transparent"/>
-						<Button id="groupButton" press=".onOpenViewSettings" icon="sap-icon://group-2" type="Transparent"/>
+						<!--<Button id="groupButton" press=".onOpenViewSettings" icon="sap-icon://group-2" type="Transparent"/>-->
 					</OverflowToolbar>
 				</headerToolbar>
 				<items>

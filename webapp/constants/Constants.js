@@ -11,7 +11,8 @@ sap.ui.define({
 	LobType: {
 		AIRPORT_CHARGES: "AirportCharges",
 		CARGO_DETAILS: "CargoDetails",
-		ENG_SERVICES: "EngServices"
+		ENG_SERVICES: "EngServices",
+		OVERFLIGHT_SERVICES: "OverflightServices"
 	},
 	LegstateType: {
 		ARRIVED: "ARR",

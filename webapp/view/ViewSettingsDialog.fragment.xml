@@ -1,40 +1,42 @@
-<core:FragmentDefinition
-	xmlns="sap.m"
-	xmlns:core="sap.ui.core">
-
-	<ViewSettingsDialog
-		id="viewSettingsDialog"
-		confirm=".onConfirmViewSettingsDialog">
-		<sortItems>
-			<ViewSettingsItem
-				text="{i18n>masterSort1}"
-				key="Arrairp"
-				selected="true"/>
-			<ViewSettingsItem
-				text="{i18n>masterSort2}"
-				key="Direction"/>
-		</sortItems>
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ViewSettingsDialog title="Filter" id="viewSettingsDialog" confirm=".onConfirmViewSettingsDialog">
 		<filterItems>
-			<ViewSettingsFilterItem
-				id="filterItems"
-				text="{i18n>masterFilterName}"
-				multiSelect="false">
+			<ViewSettingsFilterItem 
+				key="CargoDetails"
+				text="Cargo Status" 
+				multiSelect="true">
 				<items>
-					<ViewSettingsItem
-						id="viewFilter1"
-						text="{i18n>masterFilter1}"
-						key="Filter1"/>
-					<ViewSettingsItem
-						id="viewFilter2"
-						text="{i18n>masterFilter2}"
-						key="Filter2"/>
+					<ViewSettingsItem text="Not Ready" key="PEND"/>
+					<ViewSettingsItem text="Ready" key="REDY"/>
+					<ViewSettingsItem text="Confirmed" key="CONF"/>
+				</items>
+			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem 
+				key="AirportCharges"
+				text="Airport Charges Status" 
+				multiSelect="true">
+				<items>
+					<ViewSettingsItem text="Not Ready" key="PEND"></ViewSettingsItem>
+					<ViewSettingsItem text="Ready" key="REDY"></ViewSettingsItem>
+					<ViewSettingsItem text="Confirmed" key="CONF"></ViewSettingsItem>
 				</items>
 			</ViewSettingsFilterItem>
 		</filterItems>
-		<groupItems>
-			<ViewSettingsItem
-				text="{i18n>masterGroup1}"
-				key="Direction"/>
-		</groupItems>
+		
+		<!--<sortItems>-->
+		<!--	<ViewSettingsItem-->
+		<!--		text="{i18n>masterSort1}"-->
+		<!--		key="Arrairp"-->
+		<!--		selected="true"/>-->
+		<!--	<ViewSettingsItem-->
+		<!--		text="{i18n>masterSort2}"-->
+		<!--		key="Direction"/>-->
+		
+		
+		<!--</sortItems>-->		
+		<!--<groupItems>-->
+		<!--	<ViewSettingsItem text="{i18n>masterGroup1}" key="Direction"/>-->
+		<!--</groupItems>-->
+		
 	</ViewSettingsDialog>
 </core:FragmentDefinition>

@@ -476,7 +476,7 @@ sap.ui.define([
 				flightSegment: oFlightSegment,
 				// allServices: aServices, // all services from server 
 				currentServices: [], // current services that will be displayed on table 
-				moreServices: [], // more services that will be displayed on table 
+				moreServices: [], // more services that can be added to table  
 				inboundDetails: {},
 				outboundDetails: {},
 				tabs: [],
@@ -670,8 +670,9 @@ sap.ui.define([
 			} else if (sLob === Constants.LobType.CARGO_DETAILS) {
 				return oFlightSegment.FlightSegmentItemSetCG.results;
 			} else if (sLob === Constants.LobType.ENG_SERVICES) {
-				// TODO: implement engineering services here ! 
-				return null;
+				return oFlightSegment.FlightSegmentItemSetEG.results;
+			} else if (sLob === Constants.LobType.OVERFLIGHT_SERVICES){
+				return oFlightSegment.FlightSegmentItemSetOV.results;
 			}
 		},
 

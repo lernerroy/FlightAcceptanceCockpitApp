@@ -4,7 +4,11 @@
 		<semantic:titleHeading>
 			<Title text="Engineering Services"/>
 		</semantic:titleHeading>
-	
+		<semantic:footerCustomActions>
+			<Button icon="sap-icon://edit" text="Edit" visible='{= !${lobView>/editMode}}' press=".onEditPressed"/>
+			<Button icon="sap-icon://decline" text="Cancel" press=".onCancelEdit" visible='{= ${lobView>/editMode}}'/>
+			<Button icon="sap-icon://accept" text="Save" type="Emphasized" press=".onSaveFlight" visible='{= ${lobView>/editMode}}'/>
+		</semantic:footerCustomActions>
 		<semantic:content>
 			<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected"
 				backgroundDesign="Transparent" expandable="false" items="{flightServices>/tabs}">
@@ -15,23 +19,7 @@
 						</ScrollContainer>
 					</IconTabFilter>
 				</items>
-			</IconTabBar>			
-			<!--<IconTabBar id="TabBar" stretchContentHeight="true" upperCase="true" expanded="{device>/isNoPhone}" select=".onTabSelected"-->
-			<!--	backgroundDesign="Transparent" expandable="false">-->
-			<!--	<items>-->
-			<!--		<IconTabFilter key="ARR" id="arrivalTab" design="Horizontal" text="Arrival" icon="sap-icon://fa/arrival">-->
-			<!--			<ScrollContainer id="scrollContArrival" width="100%" height="100%" horizontal="false" vertical="true">-->
-			<!--				<core:Fragment id="arrServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
-			<!--			</ScrollContainer>-->
-			<!--		</IconTabFilter>-->
-			<!--		<IconTabSeparator icon=""/>-->
-			<!--		<IconTabFilter key="DEP" id="depatureTab" design="Horizontal" text="Departure" icon="sap-icon://fa/departure">-->
-			<!--			<ScrollContainer width="100%" height="100%" horizontal="false" vertical="true">-->
-			<!--				<core:Fragment id="depServices" fragmentName="com.legstate.fts.app.FlightAcceptanceCockpit.fragments.Services" type="XML"/>-->
-			<!--			</ScrollContainer>-->
-			<!--		</IconTabFilter>-->
-			<!--	</items>-->
-			<!--</IconTabBar>-->
+			</IconTabBar>
 		</semantic:content>
 		<semantic:closeAction>
 			<semantic:CloseAction id="closeColumn" press=".onClose"/>

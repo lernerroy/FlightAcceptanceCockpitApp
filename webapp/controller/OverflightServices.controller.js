@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (Controller,LobBase, JSONModel, Constants) {
 	"use strict";
 
-	return LobBase.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.EngServices", {
+	return LobBase.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.OverlightServices", {
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -20,18 +20,18 @@ sap.ui.define([
 				title: ""
 			});
 
-			this.setModel(oViewModel, "engServicesView");
+			this.setModel(oViewModel, "overflightServicesView");
 
-
-			this.getRouter().getRoute("EngServices").attachPatternMatched(this.handleRouteMatched, this);
+			this.getRouter().getRoute("OverflightServices").attachPatternMatched(this.handleRouteMatched, this);
 			
 			this._oTabBar = this.getView().byId("TabBar");
 
 			// setup			
 			this.setupLobModel(
 				this.getResourceBundle().getText("AC_INFO_PANEL_TITLE"),
-				Constants.LobType.ENG_SERVICES
+				Constants.LobType.OVERFLIGHT_SERVICES
 			);
+		
 		},
 		
 		toggleEditMode: function (oEvent) {
@@ -47,7 +47,7 @@ sap.ui.define([
 			
 			this.loadServices(
 				sObjectPath,
-				"FlightSegmentItemSetEG"
+				"FlightSegmentItemSetOV"
 			);
 		}
 
