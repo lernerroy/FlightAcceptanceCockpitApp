@@ -1,42 +1,36 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<ViewSettingsDialog title="Filter" id="viewSettingsDialog" confirm=".onConfirmViewSettingsDialog">
 		<filterItems>
-			<ViewSettingsFilterItem 
-				key="CargoDetails"
-				text="Cargo Status" 
-				multiSelect="true">
+			<ViewSettingsFilterItem key="legstate" text="Leg State" multiSelect="true">
+				<items>
+					<ViewSettingsItem text="Arrival" key="ARR"/>
+					<ViewSettingsItem text="Departed" key="DEP"/>
+					<ViewSettingsItem text="Cancelled" key="CNL"/>
+					<ViewSettingsItem text="Returned" key="RTR"/>
+					<ViewSettingsItem text="Not Arrived" key="PEND" />
+				</items>
+			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem key="airportcharges" text="Airport Charges Status" multiSelect="true">
 				<items>
 					<ViewSettingsItem text="Not Ready" key="PEND"/>
 					<ViewSettingsItem text="Ready" key="REDY"/>
 					<ViewSettingsItem text="Confirmed" key="CONF"/>
 				</items>
 			</ViewSettingsFilterItem>
-			<ViewSettingsFilterItem 
-				key="AirportCharges"
-				text="Airport Charges Status" 
-				multiSelect="true">
+			<ViewSettingsFilterItem key="cargo" text="Cargo Status" multiSelect="true">
 				<items>
-					<ViewSettingsItem text="Not Ready" key="PEND"></ViewSettingsItem>
-					<ViewSettingsItem text="Ready" key="REDY"></ViewSettingsItem>
-					<ViewSettingsItem text="Confirmed" key="CONF"></ViewSettingsItem>
+					<ViewSettingsItem text="Not Ready" key="PEND"/>
+					<ViewSettingsItem text="Ready" key="REDY"/>
+					<ViewSettingsItem text="Confirmed" key="CONF"/>
 				</items>
 			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem key="engservices" text="Engineering Services Status" multiSelect="true">
+				<items>
+					<ViewSettingsItem text="Not Ready" key="PEND"/>
+					<ViewSettingsItem text="Ready" key="REDY"/>
+					<ViewSettingsItem text="Confirmed" key="CONF"/>
+				</items>
+			</ViewSettingsFilterItem>			
 		</filterItems>
-		
-		<!--<sortItems>-->
-		<!--	<ViewSettingsItem-->
-		<!--		text="{i18n>masterSort1}"-->
-		<!--		key="Arrairp"-->
-		<!--		selected="true"/>-->
-		<!--	<ViewSettingsItem-->
-		<!--		text="{i18n>masterSort2}"-->
-		<!--		key="Direction"/>-->
-		
-		
-		<!--</sortItems>-->		
-		<!--<groupItems>-->
-		<!--	<ViewSettingsItem text="{i18n>masterGroup1}" key="Direction"/>-->
-		<!--</groupItems>-->
-		
 	</ViewSettingsDialog>
 </core:FragmentDefinition>

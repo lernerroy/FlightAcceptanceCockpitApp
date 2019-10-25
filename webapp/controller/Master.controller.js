@@ -6,10 +6,12 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
 	"sap/m/GroupHeaderListItem",
 	"sap/ui/Device",
+	"sap/ui/model/FilterType",
 	"sap/ui/core/Fragment",
 	"../model/formatter",
 	"../constants/Constants"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, Fragment, formatter, Constants) {
+], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, FilterType, Fragment, formatter,
+	Constants) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.Master", {
@@ -32,24 +34,6 @@ sap.ui.define([
 				// so it can be restored later on. Busy handling on the master list is
 				// taken care of by the master list itself.
 				iOriginalBusyDelay = oList.getBusyIndicatorDelay();
-
-			this._oGroupFunctions = {
-				Direction: function (oContext) {
-					var iNumber = oContext.getProperty('Direction'),
-						key, text;
-					if (iNumber <= 20) {
-						key = "LE20";
-						text = this.getResourceBundle().getText("masterGroup1Header1");
-					} else {
-						key = "GT20";
-						text = this.getResourceBundle().getText("masterGroup1Header2");
-					}
-					return {
-						key: key,
-						text: text
-					};
-				}.bind(this)
-			};
 
 			this._oList = oList;
 			// keeps the filter and search state
@@ -75,7 +59,7 @@ sap.ui.define([
 
 			this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
 			this.getRouter().attachBypassed(this.onBypassed, this);
-		},		
+		},
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -90,35 +74,6 @@ sap.ui.define([
 		onUpdateFinished: function (oEvent) {
 			// update the master list object counter after new data is loaded
 			this._updateListItemCount(oEvent.getParameter("total"));
-		},
-
-		/**
-		 * Event handler for the master search field. Applies current
-		 * filter value and triggers a new search. If the search field's
-		 * 'refresh' button has been pressed, no new search is triggered
-		 * and the list binding is refresh instead.
-		 * @param {sap.ui.base.Event} oEvent the search event
-		 * @public
-		 */
-		onSearch: function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-				return;
-			}
-
-			var sQuery = oEvent.getParameter("query");
-
-			if (sQuery) {
-				this._oListFilterState.aSearch = [new Filter("Arrairp", FilterOperator.Contains, sQuery)];
-			} else {
-				this._oListFilterState.aSearch = [];
-			}
-			this._applyFilterSearch();
-
 		},
 
 		/**
@@ -173,54 +128,68 @@ sap.ui.define([
 		 * @public
 		 */
 		onConfirmViewSettingsDialog: function (oEvent) {
-			// var aFilterItems = oEvent.getParameters().filterItems,
-			// 	aFilters = [],
-			// 	aCaptions = [];
-				
-		// // update filter state:
-			// // combine the filter array and the filter string
-			// aFilterItems.forEach(function (oItem) {
-			// 	switch (oItem.getKey()) {
-			// 	case "Filter1":
-			// 		aFilters.push(new Filter("Direction", FilterOperator.LE, 100));
-			// 		break;
-			// 	case "Filter2":
-			// 		aFilters.push(new Filter("Direction", FilterOperator.GT, 100));
-			// 		break;
-			// 	default:
-			// 		break;
-			// 	}
-			// 	aCaptions.push(oItem.getText());
-			// });
 
-			// this._oListFilterState.aFilter = aFilters;
-			// this._updateFilterBar(aCaptions.join(", "));
-			// this._applyFilterSearch();
-			// this._applySortGroup(oEvent);
-		},
+			var aFilters = [];
 
-		/**
-		 * Apply the chosen sorter and grouper to the master list
-		 * @param {sap.ui.base.Event} oEvent the confirm event
-		 * @private
-		 */
-		_applySortGroup: function (oEvent) {
-			var mParams = oEvent.getParameters(),
-				sPath,
-				bDescending,
-				aSorters = [];
-			// apply sorter to binding
-			// (grouping comes before sorting)
-			if (mParams.groupItem) {
-				sPath = mParams.groupItem.getKey();
-				bDescending = mParams.groupDescending;
-				var vGroup = this._oGroupFunctions[sPath];
-				aSorters.push(new Sorter(sPath, bDescending, vGroup));
+			var aFilterItems = oEvent.getParameters().filterItems;
+			
+			var legstateFilters = [];
+			var airportChargesFilters = [];
+			var cargoFilters = [];
+			var engServicesFilters = [];
+
+			aFilterItems.forEach(function (oItem) {
+				switch (oItem.getParent().getKey()) {
+				case "legstate":
+					legstateFilters.push(new Filter("NxtLegState", FilterOperator.EQ, oItem.getKey()));
+					break;
+				case "airportcharges":
+					airportChargesFilters.push(new Filter("NxtAirpLight", FilterOperator.EQ, oItem.getKey()));
+					break;
+				case "cargo":
+					cargoFilters.push(new Filter("NxtCrgoLight", FilterOperator.EQ, oItem.getKey()));
+					break;
+				case "engservices":
+					engServicesFilters.push(new Filter("NxtEngrLight", FilterOperator.EQ, oItem.getKey()));
+					break;
+				default:
+					break;
+				}
+			});
+			
+			// build the final filters array 
+			if (legstateFilters.length > 0){
+				aFilters.push(new Filter({
+					filters: legstateFilters,
+					and: false
+				}));
 			}
-			sPath = mParams.sortItem.getKey();
-			bDescending = mParams.sortDescending;
-			aSorters.push(new Sorter(sPath, bDescending));
-			this._oList.getBinding("items").sort(aSorters);
+			
+			if (airportChargesFilters.length > 0){
+				aFilters.push(new Filter({
+					filters: airportChargesFilters,
+					and: false
+				}));
+			}	
+			
+			if (cargoFilters.length > 0){
+				aFilters.push(new Filter({
+					filters: cargoFilters,
+					and: false
+				}));
+			}	
+			
+			if (engServicesFilters.length > 0){
+				aFilters.push(new Filter({
+					filters: engServicesFilters,
+					and: false
+				}));
+			}				
+
+			this._oListFilterState.aFilter = aFilters;
+			this._updateFilterBar(oEvent.getParameters().filterString);
+
+			this._applyFilterSearch();
 		},
 
 		/**
@@ -336,9 +305,13 @@ sap.ui.define([
 		 * @private
 		 */
 		_applyFilterSearch: function () {
-			var aFilters = this._oListFilterState.aSearch.concat(this._oListFilterState.aFilter),
-				oViewModel = this.getModel("masterView");
-			this._oList.getBinding("items").filter(aFilters, "Application");
+			// var aFilters = this._oListFilterState.aSearch.concat(this._oListFilterState.aFilter),
+			var aFilters = this._oListFilterState.aFilter;
+			var oViewModel = this.getModel("masterView");
+			this._oList.getBinding("items").filter(new Filter({
+				filters: aFilters,
+				and: true
+			}), "Application");
 			// changes the noDataText of the list in case there are no filter results
 			if (aFilters.length !== 0) {
 				oViewModel.setProperty("/noDataText", this.getResourceBundle().getText("masterListNoDataWithFilterOrSearchText"));
@@ -356,7 +329,8 @@ sap.ui.define([
 		_updateFilterBar: function (sFilterBarText) {
 			var oViewModel = this.getModel("masterView");
 			oViewModel.setProperty("/isFilterBarVisible", (this._oListFilterState.aFilter.length > 0));
-			oViewModel.setProperty("/filterBarLabel", this.getResourceBundle().getText("masterFilterBarText", [sFilterBarText]));
+			oViewModel.setProperty("/filterBarLabel", sFilterBarText);
+			// oViewModel.setProperty("/filterBarLabel", this.getResourceBundle().getText("masterFilterBarText", [sFilterBarText]));
 		}
 
 	});
