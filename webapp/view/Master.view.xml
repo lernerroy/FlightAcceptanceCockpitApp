@@ -17,6 +17,21 @@
 				</infoToolbar>
 				<headerToolbar>
 					<OverflowToolbar>
+					<SearchField
+							id="searchField"
+							enabled="false"
+							showRefreshButton="true"
+							tooltip="{i18n>masterSearchTooltip}"
+							search=".onSearch"
+							width="auto">
+							<layoutData>
+								<OverflowToolbarLayoutData
+									minWidth="150px"
+									maxWidth="240px"
+									shrinkable="true"
+									priority="NeverOverflow"/>
+							</layoutData>
+						</SearchField>						
 						<ToolbarSpacer/>
 						<Button id="filterButton" press=".onOpenViewSettings" icon="sap-icon://filter" type="Transparent"/>
 					</OverflowToolbar>

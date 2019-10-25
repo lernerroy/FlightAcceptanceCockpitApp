@@ -136,6 +136,8 @@ sap.ui.define([
 				});
 
 				this._bindView("/" + sObjectPath);
+				this._handleLobsActiveStatus("/" + sObjectPath);
+
 			}.bind(this));
 		},
 
@@ -165,6 +167,39 @@ sap.ui.define([
 					}
 				}
 			});
+		},
+
+		_handleLobsActiveStatus: function (sObjectPath) {
+			var oDataModel = this.getModel();
+			var oLobsModel = this.getModel("lobs");
+
+			// get the current presented item from the 
+			// odata model
+			var oItem = oDataModel.getProperty(sObjectPath);
+
+			// NxtAirpLight
+			// NxtCrgoLight
+			// NxtEngrLight
+			// NxtLegState
+
+			// modify lobs statuses based on the item status values 
+			oLobsModel.getData().forEach(function (oLob) {
+				switch (oLob.type) {
+				case "AC":
+					oLob.active = oItem.NxtAirpLight !== 'PEND' && oItem.NxtLegState !== 'PEND';
+					break;
+				case "CC":
+					oLob.active = oItem.NxtCrgoLight !== 'PEND' && oItem.NxtLegState !== 'PEND';
+					break;
+				case "ES":
+					oLob.active = oItem.NxtEngrLight !== 'PEND' && oItem.NxtLegState !== 'PEND';
+					break;
+				default:
+					oLob.active = false;
+					break;
+				}
+			});
+
 		},
 
 		beforeOpenIntStatusPopover: function (oEvent) {
