@@ -12,7 +12,7 @@
 		"resources": "resources.json",
 		"dataSources": {
 			"mainService": {
-				"uri": "/FTS/sap/opu/odata/sap/ZGW_LS_FO_SERVICES_SRV/",
+				"uri": "/sap/opu/odata/sap/ZGW_LS_FO_SERVICES_SRV/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0",

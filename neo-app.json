@@ -41,10 +41,11 @@
       "description": "SAPUI5 Test Resources"
     },
     {
-      "path": "/FTS",
+      "path": "/sap/opu/odata",
       "target": {
         "type": "destination",
-        "name": "FIDCLNT300"
+        "name": "FIDCLNT300",
+        "entryPath": "/sap/opu/odata"
       },
       "description": "Flight To Settle System"
     }
