@@ -177,11 +177,6 @@ sap.ui.define([
 			// odata model
 			var oItem = oDataModel.getProperty(sObjectPath);
 
-			// NxtAirpLight
-			// NxtCrgoLight
-			// NxtEngrLight
-			// NxtLegState
-
 			// modify lobs statuses based on the item status values 
 			oLobsModel.getData().forEach(function (oLob) {
 				switch (oLob.type) {

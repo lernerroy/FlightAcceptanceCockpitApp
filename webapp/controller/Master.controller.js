@@ -12,7 +12,7 @@ sap.ui.define([
 	"../constants/Constants",
 	"sap/ui/util/Storage"
 ], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, FilterType, Fragment, formatter,
-	Constants,Storage) {
+	Constants, Storage) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.Master", {
@@ -42,6 +42,7 @@ sap.ui.define([
 				aFilter: [],
 				aSearch: []
 			};
+			
 
 			this.setModel(oViewModel, "masterView");
 			// Make sure, busy indication is showing immediately so there is no
@@ -60,6 +61,7 @@ sap.ui.define([
 
 			this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
 			this.getRouter().attachBypassed(this.onBypassed, this);
+			
 		},
 
 		/* =========================================================== */
@@ -130,65 +132,108 @@ sap.ui.define([
 		 */
 		onConfirmViewSettingsDialog: function (oEvent) {
 
+			var aFilterItems = oEvent.getParameters().filterItems;
+
+			// create storage reference
+			var oFilterStorage = new Storage(Storage.Type.local, "filters");
+
+			var filterObj = {
+				filters: {},
+				filterString: oEvent.getParameters().filterString
+			};
+
+			aFilterItems.forEach(function (oItem) {
+				
+				if (!filterObj.filters[oItem.getParent().getKey()]) {
+					filterObj.filters[oItem.getParent().getKey()] = [];
+				}
+
+				filterObj.filters[oItem.getParent().getKey()].push({
+					operator: FilterOperator.EQ,
+					value: oItem.getKey()
+				});
+			});
+
+			oFilterStorage.put("currentFilter", JSON.stringify(filterObj));
+			
+			this._applyFilterFromStorage();
+
+		},
+
+		_applyFilterFromStorage: function () {
+			
+			var oFilterStorage = new Storage(Storage.Type.local, "filters");
+			
+			var filterObjString = oFilterStorage.get("currentFilter");
+			
+			// if no filters found in local storage 
+			// we can simply continue 
+			if (!filterObjString){
+				return;
+			}
+			
+			var filterObj = JSON.parse(filterObjString);
+			
 			var aFilters = [];
 
-			var aFilterItems = oEvent.getParameters().filterItems;
-			
 			var legstateFilters = [];
 			var airportChargesFilters = [];
 			var cargoFilters = [];
 			var engServicesFilters = [];
 
-			aFilterItems.forEach(function (oItem) {
-				switch (oItem.getParent().getKey()) {
-				case "legstate":
-					legstateFilters.push(new Filter("NxtLegState", FilterOperator.EQ, oItem.getKey()));
-					break;
-				case "airportcharges":
-					airportChargesFilters.push(new Filter("NxtAirpLight", FilterOperator.EQ, oItem.getKey()));
-					break;
-				case "cargo":
-					cargoFilters.push(new Filter("NxtCrgoLight", FilterOperator.EQ, oItem.getKey()));
-					break;
-				case "engservices":
-					engServicesFilters.push(new Filter("NxtEngrLight", FilterOperator.EQ, oItem.getKey()));
-					break;
-				default:
-					break;
-				}
+			Object.keys(filterObj.filters).map(function (key) {
+				var filtersVal = filterObj.filters[key];
+				filtersVal.forEach(function (filter) {
+					switch (key) {
+					case "legstate":
+						legstateFilters.push(new Filter("NxtLegState", filter.operator, filter.value));
+						break;
+					case "airportcharges":
+						airportChargesFilters.push(new Filter("NxtAirpLight", filter.operator, filter.value));
+						break;
+					case "cargo":
+						cargoFilters.push(new Filter("NxtCrgoLight", filter.operator, filter.value));
+						break;
+					case "engservices":
+						engServicesFilters.push(new Filter("NxtEngrLight", filter.operator, filter.value));
+						break;
+					default:
+						break;
+					}
+				});
 			});
 			
 			// build the final filters array 
-			if (legstateFilters.length > 0){
+			if (legstateFilters.length > 0) {
 				aFilters.push(new Filter({
 					filters: legstateFilters,
 					and: false
 				}));
 			}
-			
-			if (airportChargesFilters.length > 0){
+
+			if (airportChargesFilters.length > 0) {
 				aFilters.push(new Filter({
 					filters: airportChargesFilters,
 					and: false
 				}));
-			}	
-			
-			if (cargoFilters.length > 0){
+			}
+
+			if (cargoFilters.length > 0) {
 				aFilters.push(new Filter({
 					filters: cargoFilters,
 					and: false
 				}));
-			}	
-			
-			if (engServicesFilters.length > 0){
+			}
+
+			if (engServicesFilters.length > 0) {
 				aFilters.push(new Filter({
 					filters: engServicesFilters,
 					and: false
 				}));
-			}				
+			}
 
 			this._oListFilterState.aFilter = aFilters;
-			this._updateFilterBar(oEvent.getParameters().filterString);
+			this._updateFilterBar(filterObj.filterString);
 
 			this._applyFilterSearch();
 		},
@@ -268,6 +313,7 @@ sap.ui.define([
 		_onMasterMatched: function () {
 			//Set the layout property of the FCL control to 'OneColumn'
 			this.getModel("appView").setProperty("/layout", "OneColumn");
+			this._applyFilterFromStorage();
 		},
 
 		/**

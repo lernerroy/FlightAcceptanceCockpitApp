@@ -5,11 +5,6 @@
 				<items>
 					<ViewSettingsItem text="Not Ready" key="PEND"/>
 					<ViewSettingsItem text="Ready" key="REDY"/>
-					<!--<ViewSettingsItem text="Arrival" key="ARR"/>-->
-					<!--<ViewSettingsItem text="Departed" key="DEP"/>-->
-					<!--<ViewSettingsItem text="Cancelled" key="CNL"/>-->
-					<!--<ViewSettingsItem text="Returned" key="RTR"/>-->
-					<!--<ViewSettingsItem text="Not Arrived" key="PEND" />-->
 				</items>
 			</ViewSettingsFilterItem>
 			<ViewSettingsFilterItem key="airportcharges" text="Airport Charges Status" multiSelect="true">
