@@ -9,9 +9,10 @@ sap.ui.define([
 	"sap/ui/model/FilterType",
 	"sap/ui/core/Fragment",
 	"../model/formatter",
-	"../constants/Constants"
+	"../constants/Constants",
+	"sap/ui/util/Storage"
 ], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, FilterType, Fragment, formatter,
-	Constants) {
+	Constants,Storage) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.Master", {

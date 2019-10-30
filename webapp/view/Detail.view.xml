@@ -20,7 +20,7 @@
 								<HBox class="sapUiTinyMarginBottom">
 									<core:Icon src="sap-icon://fa/arrival" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Preaufnr'}, {value: 'ARR'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
-									<ObjectStatus active="true" press=".onOverallStatusPressed"
+									<ObjectStatus active="true" press=".onOverallStatusPressed" visible="{= ${Preaufnr} !== ''}"
 										text="{path: 'PreOverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
 										state="{path: 'PreOverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
 										<customData>
@@ -60,7 +60,7 @@
 									<core:Icon src="sap-icon://fa/departure" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Aufnr'}, {value: 'DEP'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
 									<ObjectStatus active="true" press=".onOverallStatusPressed"
-										text="{path: 'OverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
+										text="{path: 'OverallLight', formatter: '.formatter.overallStatusTextFormatter'}" visible="{= ${Aufnr} !== ''}"
 										state="{path: 'OverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
 										<customData>
 											<core:CustomData key="direction" value="DEP"/>
@@ -102,8 +102,7 @@
 							<uxap:ObjectPageSubSection>
 								<uxap:blocks>
 									<f:GridList visible="{= !${detailView>/busy}}" width="100%" items="{ path: 'lobs>/' }" itemPress=".onLobSelected">
-										<CustomListItem blocked="{= !${lobs>active}}"
-											type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
+										<CustomListItem blocked="{= !${lobs>active}}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
 											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
 												<Image height="5rem" width="5rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
 												<Title text="{lobs>title}" level="H4" titleStyle="H4" class="sapUiSmallMarginEnd"/>
