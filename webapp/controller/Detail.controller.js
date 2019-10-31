@@ -214,7 +214,7 @@ sap.ui.define([
 
 			// extract the current flight segment from model 			
 			var oFlightSegment = this.getModel().getProperty(sObjectPath);
-
+			
 			// Build the interface status model based on the 
 			// data we have in the flight segment for the specific direction 
 
@@ -223,10 +223,10 @@ sap.ui.define([
 				status: sDirection === Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PrePssLight : oFlightSegment.PssLight
 			}, {
 				name: "Cargo",
-				status: Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCargoLight : oFlightSegment.CargoLight
+				status: sDirection === Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCargoLight : oFlightSegment.CargoLight
 			}, {
 				name: "Overfly",
-				status: Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCfpLight : oFlightSegment.CfpLight
+				status: sDirection === Constants.FlightSegmentType.ARRIVAL ? oFlightSegment.PreCfpLight : oFlightSegment.CfpLight
 			}]);
 
 			this._oInteracesPopOver.setModel(oInterfaceStatusModel, "interfaceStatus");
