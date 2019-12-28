@@ -6,7 +6,7 @@
 		</semantic:titleHeading>
 		<semantic:content>
 			<List id="list" width="auto" class="sapFDynamicPageAlignContent"
-				items="{ path: '/FlightSegmentHeaderSet', sorter: { path: 'Direction', descending: false }, groupHeaderFactory: '.createGroupHeader' }"
+				items="{ path: '/FlightSegmentHeaderSet', parameters: {custom: {}}, filters: [], sorter: { path: 'Direction', descending: false }, groupHeaderFactory: '.createGroupHeader' }"
 				busyIndicatorDelay="{masterView>/delay}" noDataText="{masterView>/noDataText}"
 				mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true"
 				updateFinished=".onUpdateFinished" selectionChange='onSelectionChange'>
@@ -19,7 +19,7 @@
 					<OverflowToolbar>
 					<SearchField
 							id="searchField"
-							enabled="false"
+							enabled="true"
 							showRefreshButton="true"
 							tooltip="{i18n>masterSearchTooltip}"
 							search=".onSearch"

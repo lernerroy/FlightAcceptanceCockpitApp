@@ -176,6 +176,10 @@ sap.ui.define([
 			// get the current presented item from the 
 			// odata model
 			var oItem = oDataModel.getProperty(sObjectPath);
+			
+			if (!oItem){
+				return;
+			}
 
 			// modify lobs statuses based on the item status values 
 			oLobsModel.getData().forEach(function (oLob) {
@@ -244,6 +248,7 @@ sap.ui.define([
 			var sLobType = oLob.getProperty("type");
 			var oRouter = this.getRouter();
 
+			// TODO: use contsants 
 			if (sLobType === "AC") {
 				oRouter.navTo("AirportCharges", {
 					arrFlightNo: oItem.getProperty("Preaufnr"),
@@ -264,6 +269,11 @@ sap.ui.define([
 					arrFlightNo: oItem.getProperty("Preaufnr"),
 					depFlightNo: oItem.getProperty("Aufnr")
 				});
+			} else if (sLobType === "CT"){
+				oRouter.navTo("Catering", {
+					arrFlightNo: oItem.getProperty("Preaufnr"),
+					depFlightNo: oItem.getProperty("Aufnr")
+				});				
 			}
 		},
 

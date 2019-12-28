@@ -22,5 +22,11 @@
 		"imageSrc": "./images/overfly.jpg",
 		"type": "ON",
 		"active": true
-	}		
+	},
+	{
+		"title": "Catering",
+		"imageSrc": "./images/catering.jpeg",
+		"type": "CT",
+		"active": true
+	}
 ]

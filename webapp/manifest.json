@@ -167,6 +167,15 @@
 						"object",
 						"overflightServices"
 					]
+				},
+				{
+					"pattern": "Flight/:arrFlightNo:/:depFlightNo:/Catering",
+					"name": "Catering",
+					"target": [
+						"master",
+						"object",
+						"catering"
+					]					
 				}
 			],
 			"targets": {
@@ -223,6 +232,12 @@
 					"viewId": "detailObjectNotFound",
 					"controlAggregation": "midColumnPages"
 				},
+				"catering": {
+					"viewType": "XML",
+					"viewId": "catering",
+					"viewName": "Catering",
+					"controlAggregation": "midColumnPages"
+				},				
 				"notFound": {
 					"viewName": "NotFound",
 					"viewId": "notFound"

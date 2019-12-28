@@ -28,6 +28,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit: function () {
+
 			// Control state model
 			var oList = this.byId("list"),
 				oViewModel = this._createViewModel(),
@@ -40,9 +41,8 @@ sap.ui.define([
 			// keeps the filter and search state
 			this._oListFilterState = {
 				aFilter: [],
-				aSearch: []
+				searchQuery: undefined
 			};
-			
 
 			this.setModel(oViewModel, "masterView");
 			// Make sure, busy indication is showing immediately so there is no
@@ -53,6 +53,12 @@ sap.ui.define([
 				oViewModel.setProperty("/delay", iOriginalBusyDelay);
 			});
 
+			var self = this;
+
+			oList.attachEventOnce("updateStarted", function () {
+				self._applyFilterFromStorage();
+			});
+
 			this.getView().addEventDelegate({
 				onBeforeFirstShow: function () {
 					this.getOwnerComponent().oListSelector.setBoundMasterList(oList);
@@ -61,7 +67,20 @@ sap.ui.define([
 
 			this.getRouter().getRoute("master").attachPatternMatched(this._onMasterMatched, this);
 			this.getRouter().attachBypassed(this.onBypassed, this);
-			
+
+		},
+
+		onSearch: function (oEvent) {
+			var query = oEvent.getParameter("query");
+
+			if (query && query.length) {
+				this._oListFilterState.searchQuery = query;
+			} else {
+				this._oListFilterState.searchQuery = undefined;
+			}
+
+			this._applyFilterSearch();
+
 		},
 
 		/* =========================================================== */
@@ -143,7 +162,7 @@ sap.ui.define([
 			};
 
 			aFilterItems.forEach(function (oItem) {
-				
+
 				if (!filterObj.filters[oItem.getParent().getKey()]) {
 					filterObj.filters[oItem.getParent().getKey()] = [];
 				}
@@ -155,25 +174,25 @@ sap.ui.define([
 			});
 
 			oFilterStorage.put("currentFilter", JSON.stringify(filterObj));
-			
+
 			this._applyFilterFromStorage();
 
 		},
 
 		_applyFilterFromStorage: function () {
-			
+
 			var oFilterStorage = new Storage(Storage.Type.local, "filters");
-			
+
 			var filterObjString = oFilterStorage.get("currentFilter");
-			
+
 			// if no filters found in local storage 
 			// we can simply continue 
-			if (!filterObjString){
+			if (!filterObjString) {
 				return;
 			}
-			
+
 			var filterObj = JSON.parse(filterObjString);
-			
+
 			var aFilters = [];
 
 			var legstateFilters = [];
@@ -202,7 +221,7 @@ sap.ui.define([
 					}
 				});
 			});
-			
+
 			// build the final filters array 
 			if (legstateFilters.length > 0) {
 				aFilters.push(new Filter({
@@ -233,6 +252,7 @@ sap.ui.define([
 			}
 
 			this._oListFilterState.aFilter = aFilters;
+
 			this._updateFilterBar(filterObj.filterString);
 
 			this._applyFilterSearch();
@@ -313,7 +333,6 @@ sap.ui.define([
 		_onMasterMatched: function () {
 			//Set the layout property of the FCL control to 'OneColumn'
 			this.getModel("appView").setProperty("/layout", "OneColumn");
-			this._applyFilterFromStorage();
 		},
 
 		/**
@@ -352,20 +371,21 @@ sap.ui.define([
 		 * @private
 		 */
 		_applyFilterSearch: function () {
-			// var aFilters = this._oListFilterState.aSearch.concat(this._oListFilterState.aFilter),
+			
 			var aFilters = this._oListFilterState.aFilter;
-			var oViewModel = this.getModel("masterView");
-			this._oList.getBinding("items").filter(new Filter({
-				filters: aFilters,
-				and: true
-			}), "Application");
-			// changes the noDataText of the list in case there are no filter results
-			if (aFilters.length !== 0) {
-				oViewModel.setProperty("/noDataText", this.getResourceBundle().getText("masterListNoDataWithFilterOrSearchText"));
-			} else if (this._oListFilterState.aSearch.length > 0) {
-				// only reset the no data text to default when no new search was triggered
-				oViewModel.setProperty("/noDataText", this.getResourceBundle().getText("masterListNoDataText"));
+			var searchQuery = this._oListFilterState.searchQuery;
+
+			var oBindingInfo = this._oList.getBindingInfo("items");
+			oBindingInfo.filters = aFilters;
+			
+			// apply search query to custom url parameters
+			if (searchQuery && searchQuery.length){
+				oBindingInfo.parameters.custom.search = searchQuery;
+			} else {
+				delete oBindingInfo.parameters.custom.search;
 			}
+			
+			this._oList.bindItems(oBindingInfo);
 		},
 
 		/**
