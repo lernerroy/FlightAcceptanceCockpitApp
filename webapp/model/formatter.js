@@ -24,12 +24,12 @@ sap.ui.define([
 			case Constants.FlightSegmentStatus.PENDING:
 				return "None";
 			case Constants.FlightSegmentStatus.READY:
-				return "Indication03";
+				return "Warning";
 			case Constants.FlightSegmentStatus.CONFIRMED:
 				return "Success";
 			}
 
-			return "Indication01";
+			return "None";
 		},
 
 		overallStatusTextFormatter: function (sStatus) {
@@ -70,18 +70,18 @@ sap.ui.define([
 			case Constants.LegstateType.DEPARTED:
 				return "Success";
 			case Constants.LegstateType.CANCELED:
-				return "Indication03";
+				return "Warning";
 			case Constants.LegstateType.RETURNED:
-				return "Indication03";
+				return "Warning";
 			}
 
-			return "Indication01";
+			return "None";
 		},
 
 		interfaceStatusState: function (sStatus) {
 			switch (sStatus) {
 			case Constants.InterfaceStatus.PENDING:
-				return "Indication03";
+				return "Warning";
 			case Constants.InterfaceStatus.ARRIVED:
 				return "Success";
 			}
@@ -97,7 +97,7 @@ sap.ui.define([
 				return "Arrived";
 			}
 
-			return "Unknown";
+			return "None";
 		}
 	};
 });

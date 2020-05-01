@@ -27,7 +27,9 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 				busy: false,
 				delay: 0,
-				lineItemListTitle: this.getResourceBundle().getText("detailLineItemTableHeading")
+				lineItemListTitle: this.getResourceBundle().getText("detailLineItemTableHeading"),
+				arrivals: "ARR",
+				departure: "DEP"
 			});
 
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
@@ -38,6 +40,7 @@ sap.ui.define([
 		},
 
 		SegmentTitleFormatter: function (sFlightId, sDirection) {
+			
 			if (sFlightId === null || sFlightId === undefined) {
 				return null;
 			}
@@ -67,7 +70,7 @@ sap.ui.define([
 		},
 
 		onLobSelected: function (oEvent) {
-			var listItem = oEvent.getParameter("listItem");
+			var listItem = oEvent.getSource();
 			var oItemContext = listItem.getBindingContext();
 			var oLobContext = listItem.getBindingContext("lobs");
 			this._showLob(oLobContext, oItemContext);

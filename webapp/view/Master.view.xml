@@ -22,12 +22,11 @@
 							enabled="true"
 							showRefreshButton="true"
 							tooltip="{i18n>masterSearchTooltip}"
-							search=".onSearch"
-							width="auto">
+							search=".onSearch">
 							<layoutData>
 								<OverflowToolbarLayoutData
-									minWidth="150px"
-									maxWidth="240px"
+									minWidth="300px"
+									maxWidth="450px"
 									shrinkable="true"
 									priority="NeverOverflow"/>
 							</layoutData>

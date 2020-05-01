@@ -15,11 +15,11 @@
 				<uxap:headerContent>
 					<VBox width="100%">
 						<l:Grid visible="{= !${detailView>/busy}}" width="auto" vSpacing="0" defaultSpan="XL6 L6 M6 S12" class="sapUiSmallMarginTop">
-							<!-- Arrival flight details -->
+							<!--Arrival flight details -->
 							<VBox backgroundDesign="Transparent" class="sapUiSmallMarginBottom">
 								<HBox class="sapUiTinyMarginBottom">
 									<core:Icon src="sap-icon://fa/arrival" class="sapUiTinyMarginEnd"/>
-									<Title text="{ parts: [{path: 'Preaufnr'}, {value: 'ARR'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
+									<Title text="{ parts: [{path: 'Preaufnr'}, {path: 'detailView>arrivals'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
 									<ObjectStatus active="true" press=".onOverallStatusPressed" visible="{= ${Preaufnr} !== ''}"
 										text="{path: 'PreOverallLight', formatter: '.formatter.overallStatusTextFormatter'}"
 										state="{path: 'PreOverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
@@ -54,11 +54,11 @@
 										state="{path: 'PreLegState', formatter: '.formatter.legstateTypeState'}" inverted="true"/>
 								</HBox>
 							</VBox>
-							<!-- Departure flight details  -->
+							<!--Departure flight details  -->
 							<VBox backgroundDesign="Transparent">
 								<HBox class="sapUiTinyMarginBottom">
 									<core:Icon src="sap-icon://fa/departure" class="sapUiTinyMarginEnd"/>
-									<Title text="{ parts: [{path: 'Aufnr'}, {value: 'DEP'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
+									<Title text="{ parts: [{path: 'Aufnr'}, {path: 'detailView>departure'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
 									<ObjectStatus active="true" press=".onOverallStatusPressed"
 										text="{path: 'OverallLight', formatter: '.formatter.overallStatusTextFormatter'}" visible="{= ${Aufnr} !== ''}"
 										state="{path: 'OverallLight', formatter: '.formatter.overallStatusStateFormatter'}" inverted="true" class="sapUiTinyMarginBegin">
@@ -101,18 +101,14 @@
 						<uxap:subSections>
 							<uxap:ObjectPageSubSection>
 								<uxap:blocks>
-									<f:GridList visible="{= !${detailView>/busy}}" width="100%" items="{ path: 'lobs>/' }" itemPress=".onLobSelected">
-										<CustomListItem blocked="{=${lobs>active}}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
+									<l:Grid visible="{= !${detailView>/busy}}" width="100%" content="{ path: 'lobs>/' }">
+										<CustomListItem press=".onLobSelected" visible="{lobs>visible}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
 											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
-												<Image height="4rem" width="4rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
-												<Title text="{lobs>title}" level="H4" titleStyle="H4" class="sapUiSmallMarginEnd"/>
+												<Image height="3rem" width="3rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
+												<Title text="{lobs>title}" level="H5" titleStyle="H5" class="sapUiSmallMarginEnd"/>
 											</HBox>
 										</CustomListItem>
-										<f:customLayout>
-											<!--Represnts the number of items in each grid row  -->
-											<grid:GridBoxLayout boxesPerRowConfig="XL3 L2 M2 S1"/>
-										</f:customLayout>
-									</f:GridList>
+									</l:Grid>
 								</uxap:blocks>
 							</uxap:ObjectPageSubSection>
 						</uxap:subSections>

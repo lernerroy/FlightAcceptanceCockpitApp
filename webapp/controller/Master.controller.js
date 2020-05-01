@@ -10,9 +10,8 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"../model/formatter",
 	"../constants/Constants",
-	"sap/ui/util/Storage"
 ], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, FilterType, Fragment, formatter,
-	Constants, Storage) {
+	Constants) {
 	"use strict";
 
 	return BaseController.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.Master", {
@@ -122,21 +121,17 @@ sap.ui.define([
 					sDialogTab = "group";
 				}
 			}
+			
+			var oDialog = this.byId("viewSettingsDialog");
+			
 			// load asynchronous XML fragment
-			if (!this.byId("viewSettingsDialog")) {
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "com.legstate.fts.app.FlightAcceptanceCockpit.view.ViewSettingsDialog",
-					controller: this
-				}).then(function (oDialog) {
-					// connect dialog to the root view of this component (models, lifecycle)
-					this.getView().addDependent(oDialog);
-					oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
-					oDialog.open(sDialogTab);
-				}.bind(this));
-			} else {
-				this.byId("viewSettingsDialog").open(sDialogTab);
-			}
+			if (!oDialog) {
+				oDialog = sap.ui.xmlfragment(this.getView().getId(), "com.legstate.fts.app.FlightAcceptanceCockpit.view.ViewSettingsDialog", this);
+				oDialog.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				this.getView().addDependent(oDialog);
+			} 
+			
+			oDialog.open(sDialogTab);
 
 		},
 
@@ -152,9 +147,6 @@ sap.ui.define([
 		onConfirmViewSettingsDialog: function (oEvent) {
 
 			var aFilterItems = oEvent.getParameters().filterItems;
-
-			// create storage reference
-			var oFilterStorage = new Storage(Storage.Type.local, "filters");
 
 			var filterObj = {
 				filters: {},
@@ -172,18 +164,17 @@ sap.ui.define([
 					value: oItem.getKey()
 				});
 			});
-
-			oFilterStorage.put("currentFilter", JSON.stringify(filterObj));
-
+			
+			window.localStorage.setItem("currentFilter", JSON.stringify(filterObj));
+			
 			this._applyFilterFromStorage();
 
 		},
 
 		_applyFilterFromStorage: function () {
 
-			var oFilterStorage = new Storage(Storage.Type.local, "filters");
 
-			var filterObjString = oFilterStorage.get("currentFilter");
+			var filterObjString = window.localStorage.getItem("currentFilter");
 
 			// if no filters found in local storage 
 			// we can simply continue 

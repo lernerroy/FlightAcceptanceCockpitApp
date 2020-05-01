@@ -1,7 +1,6 @@
 sap.ui.define([
 	"sap/ui/base/Object",
-	"sap/base/Log"
-], function (BaseObject, Log) {
+], function (BaseObject) {
 	"use strict";
 
 	return BaseObject.extend("com.legstate.fts.app.FlightAcceptanceCockpit.controller.ListSelector", {
@@ -85,7 +84,7 @@ sap.ui.define([
 					});
 				}.bind(this),
 				function () {
-					Log.warning("Could not select the list item with the path" + sBindingPath + " because the list encountered an error or had no items");
+					console.log("Could not select the list item with the path" + sBindingPath + " because the list encountered an error or had no items");
 				}
 			);
 		},

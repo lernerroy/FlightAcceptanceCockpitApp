@@ -175,7 +175,7 @@
 						"master",
 						"object",
 						"catering"
-					]					
+					]
 				}
 			],
 			"targets": {
@@ -237,7 +237,7 @@
 					"viewId": "catering",
 					"viewName": "Catering",
 					"controlAggregation": "midColumnPages"
-				},				
+				},
 				"notFound": {
 					"viewName": "NotFound",
 					"viewId": "notFound"
