@@ -103,7 +103,7 @@
 						<uxap:subSections>
 							<uxap:ObjectPageSubSection>
 								<uxap:blocks>
-									<l:Grid visible="{= !${detailView>/busy}}" width="100%" content="{ path: 'lobs>/' }">
+									<l:Grid vSpacing="0" visible="{= !${detailView>/busy}}" width="100%" content="{ path: 'lobs>/' }">
 										<CustomListItem press=".onLobSelected" visible="{lobs>active}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
 											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
 												<Image height="3rem" width="3rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
