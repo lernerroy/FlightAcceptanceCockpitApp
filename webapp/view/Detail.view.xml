@@ -17,7 +17,7 @@
 						<l:Grid visible="{= !${detailView>/busy}}" width="auto" vSpacing="0" defaultSpan="XL6 L6 M6 S12" class="sapUiSmallMarginTop">
 							<!--Arrival flight details -->
 							<VBox backgroundDesign="Transparent" class="sapUiSmallMarginBottom">
-								<HBox class="sapUiTinyMarginBottom">
+								<HBox class="sapUiTinyMarginBottom" alignItems="Center">
 									<core:Icon src="sap-icon://fa/arrival" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Preaufnr'}, {path: 'detailView>arrivals'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
 									<ObjectStatus active="true" press=".onOverallStatusPressed" visible="{= ${Preaufnr} !== ''}"
@@ -27,6 +27,7 @@
 											<core:CustomData key="direction" value="ARR"/>
 										</customData>
 									</ObjectStatus>
+									<core:Icon press=".onOverallStatusPressed" src="sap-icon://show" class="sapUiSmallMarginBegin"></core:Icon>
 								</HBox>
 								<HBox visible="{= ${Preaufnr} !== ''}">
 									<Label text="Order Number" design="Bold" class="sapUiTinyMarginEnd"/>
@@ -40,7 +41,7 @@
 								</HBox>
 								<HBox visible="{= ${Preaufnr} !== ''}">
 									<Label text="Actual Date / Time" design="Bold" class="sapUiTinyMarginEnd"/>
-									<Text text="{ path: 'Prearrdate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { GMT: true,pattern : 'dd MMM yyyy' } } "
+									<Text text="{ path: 'Prea rrdate', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { GMT: true,pattern : 'dd MMM yyyy' } } "
 										class="sapUiTinyMarginEnd"/>
 									<Text text="{ path : 'Prearrtime', type: 'sap.ui.model.odata.type.Time', formatOptions: { pattern: 'h:mm:ss' }} "/>
 								</HBox>
@@ -56,7 +57,7 @@
 							</VBox>
 							<!--Departure flight details  -->
 							<VBox backgroundDesign="Transparent">
-								<HBox class="sapUiTinyMarginBottom">
+								<HBox class="sapUiTinyMarginBottom" alignItems="Center">
 									<core:Icon src="sap-icon://fa/departure" class="sapUiTinyMarginEnd"/>
 									<Title text="{ parts: [{path: 'Aufnr'}, {path: 'detailView>departure'}], formatter: '.SegmentTitleFormatter' }" level="H4" titleStyle="H4"/>
 									<ObjectStatus active="true" press=".onOverallStatusPressed"
@@ -66,6 +67,7 @@
 											<core:CustomData key="direction" value="DEP"/>
 										</customData>
 									</ObjectStatus>
+									<core:Icon press=".onOverallStatusPressed" src="sap-icon://show" class="sapUiSmallMarginBegin"></core:Icon>
 								</HBox>
 								<HBox visible="{= ${Aufnr} !== ''}">
 									<Label text="Order Number" design="Bold" class="sapUiTinyMarginEnd"/>
@@ -102,7 +104,7 @@
 							<uxap:ObjectPageSubSection>
 								<uxap:blocks>
 									<l:Grid visible="{= !${detailView>/busy}}" width="100%" content="{ path: 'lobs>/' }">
-										<CustomListItem press=".onLobSelected" visible="{lobs>visible}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
+										<CustomListItem press=".onLobSelected" visible="{lobs>active}" type="Navigation" class="sapUiTinyMargin lob-card" highlight="None">
 											<HBox justifyContent="Start" fitContainer="true" alignItems="Center" class="sapUiSmallMargin" alignContent="Center">
 												<Image height="3rem" width="3rem" src="{lobs>imageSrc}" visible="{= ${device>/system/phone} ? false : true}" class="sapUiSmallMarginEnd"/>
 												<Title text="{lobs>title}" level="H5" titleStyle="H5" class="sapUiSmallMarginEnd"/>

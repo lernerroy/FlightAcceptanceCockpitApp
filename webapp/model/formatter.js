@@ -24,7 +24,7 @@ sap.ui.define([
 			case Constants.FlightSegmentStatus.PENDING:
 				return "None";
 			case Constants.FlightSegmentStatus.READY:
-				return "Warning";
+				return "Success";
 			case Constants.FlightSegmentStatus.CONFIRMED:
 				return "Success";
 			}
